@@ -233,7 +233,9 @@ def split(left, right, lf='4 1 280px', rf='8 1 520px', sec_id=None, gap='40px 32
 
 
 def photo(src, alt, ratio, caption, pos='50% 50%', download=True):
-    link = f'\n<a href="{src}" download style="{LINK}">Download</a>' if download else ''
+    # download: False for no link, True to offer the displayed file, or the path of a larger file
+    target = download if isinstance(download, str) else src
+    link = f'\n<a href="{target}" download style="{LINK}">Download</a>' if download else ''
     return f"""<figure style="margin: 0; display: flex; flex-direction: column; gap: 4px">
 <img src="{src}" alt="{alt}" loading="lazy" style="display: block; width: 100%; aspect-ratio: {ratio}; object-fit: cover; object-position: {pos}">
 <figcaption style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 24px; font-size: 15px; line-height: 22px; color: {MUTED}">
@@ -605,9 +607,9 @@ def build_bio():
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px 32px">
 <div style="flex: 7 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 48px">
-{photo(IMG['hero'], 'Kellum Jones leaning on a white plinth against a dark backdrop', '3 / 2', 'Color, landscape', '50% 30%')}
+{photo(IMG['hero'], 'Kellum Jones leaning on a white plinth against a dark backdrop', '3 / 2', 'Color, landscape', '50% 30%', download='/images/press/kellum-jones-leaning-on-hand.jpg')}
 <div class="p-indent">
-{photo(IMG['think'], 'Kellum Jones resting his chin on his hand', '3 / 2', 'Color, landscape')}
+{photo(IMG['think'], 'Kellum Jones resting his chin on his hand', '3 / 2', 'Color, landscape', download='/images/press/kellum-jones-chin-on-hand.jpg')}
 </div>
 </div>
 <div class="h-drop" style="flex: 4 1 260px; min-width: 0">
