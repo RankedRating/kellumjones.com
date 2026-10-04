@@ -828,7 +828,7 @@ def build_duo():
 <div style="flex: 5 1 340px; display: flex; flex-direction: column; gap: 24px">
 <p style="{LEAD}">Understory Duo is the double bassist Kellum Jones and the pianist Hsin Yeh.</p>
 <p style="{P}">We commission new work from living composers, and offer education for our community, showing the beauty of the double bass and the unique sound it makes together with the piano.</p>
-<p style="{P}">[Why the name: one or two sentences on what &quot;understory&quot; means to you both.]</p>
+<p style="{P}">The understory is the new growth under the canopy of a forest. For us, it means making room for up-and-coming composers to grow the repertoire for double bass and piano. This music is our passion.</p>
 <a href="{URL['contact']}" style="{LINK}">Write to the duo</a>
 </div>
 <div class="p-rise" style="position: relative; flex: 6 1 380px">
