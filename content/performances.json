@@ -1,5 +1,15 @@
 {
-  "upcoming": [],
+  "upcoming": [
+    {
+      "date": "2026-11-19",
+      "composer": "Reinhold Glière",
+      "work": "Intermezzo and Tarantella, from Four Pieces for double bass and piano",
+      "with": "Hsin Yeh, piano",
+      "venue": "Studio Theatre, RiverCenter, Columbus, Georgia",
+      "time": "",
+      "link": ""
+    }
+  ],
   "past": [],
   "videos": []
 }
