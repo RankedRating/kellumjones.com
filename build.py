@@ -31,7 +31,7 @@ YEAR = datetime.date.today().year
 
 # ------------------------------------------------------------------ design constants
 EGG, INK, MUTED, HAIR, CTL = '#f0ead6', '#000807', '#5c584b', '#b7b09a', '#857f6b'
-OX, OXINK, RED, FOOT, BACKDROP, RAISED, FIELDBG = '#6d1f2b', '#7a2531', '#b4505c', '#e6dfc8', '#0a1717', '#e6dfc8', '#faf7ec'
+OX, OXINK, RED, FOOT, BACKDROP, RAISED, FIELDBG = '#6d1f2b', '#7a2531', '#b4505c', '#e6dfc8', '#081918', '#e6dfc8', '#faf7ec'
 
 PAD = 'clamp(16px, 2.5cqw, 32px)'
 SERIF = 'Cardo, Georgia, serif'
@@ -56,9 +56,13 @@ URL = {
     'home': '/', 'bio': '/biography/', 'perf': '/performances/', 'teach': '/teaching/',
     'writing': '/writing/', 'duo': '/understory-duo/', 'contact': '/contact/',
 }
+PRESS = '/images/press/'   # the larger files offered as downloads
+FADE = '<div class="p-fade" aria-hidden="true"></div>'   # melts the top of a rising photo into the header band
 IMG = {
     'hero': '/images/kellum-jones-hero.jpg',
-    'bw': '/images/kellum-jones-portrait-bw.jpg',
+    'lean': '/images/kellum-jones-leaning-forward.jpg',
+    'stand': '/images/kellum-jones-standing.jpg',
+    'up': '/images/kellum-jones-standing-looking-up.jpg',
     'duo': '/images/understory-duo.jpg',
     'think': '/images/kellum-jones-thinking.jpg',
 }
@@ -77,13 +81,24 @@ def slugify(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
 
+# ------------------------------------------------------------------ biography text (used on the page and in the press kit)
+BIO_LEAD = 'Kellum Jones is a double bassist based in Columbus, Georgia, building a career as a soloist and teacher.'
+BIO_PARAS = [
+    'He studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, and has taken summer lessons with the soloist Mikyung Sung. He plays the German bow in the Viennese tradition of Ludwig Streicher.',
+    '[Performance highlights: two or three sentences on recitals, concerto appearances, competitions and festivals.]',
+    'Kellum is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he teaches beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob.',
+    'With the pianist Hsin Yeh he performs as Understory Duo, which commissions new work for double bass and piano from living composers. He writes about practice and the German bow in the notebook on this site.',
+]
+BIO_SHORT = 'Kellum Jones is a double bassist based in Columbus, Georgia. He studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra and performs with the pianist Hsin Yeh as Understory Duo, commissioning new work for double bass and piano from living composers.'
+KIT_URL = '/press/kellum-jones-press-kit.zip'
+
 # ------------------------------------------------------------------ site settings with placeholders
 EMAIL = SITE.get('email', '').strip()
 EMAIL_LABEL = esc(EMAIL) if EMAIL else '[your email address]'
 EMAIL_HREF = f'mailto:{esc(EMAIL)}' if EMAIL else URL['contact']
 YOUTUBE = esc(SITE.get('youtube', '').strip()) or URL['perf']
 INSTAGRAM = esc(SITE.get('instagram', '').strip()) or URL['contact']
-PRESS_KIT = esc(SITE.get('press_kit', '').strip()) or URL['bio']
+PRESS_KIT = esc(SITE.get('press_kit', '').strip()) or KIT_URL
 PHOTOGRAPHER = esc(SITE.get('photographer', '').strip()) or '[photographer]'
 REPLY_TIME = esc(SITE.get('reply_time', '').strip()) or '[a few days]'
 NEWS_TEXT = esc(SITE.get('newsletter_text', '').strip()) or 'Posts on practice, the German bow and new music for bass.'
@@ -232,12 +247,12 @@ def split(left, right, lf='4 1 280px', rf='8 1 520px', sec_id=None, gap='40px 32
 </section>"""
 
 
-def photo(src, alt, ratio, caption, pos='50% 50%', download=True):
+def photo(src, alt, ratio, caption, pos='50% 50%', download=True, cls=''):
     # download: False for no link, True to offer the displayed file, or the path of a larger file
     target = download if isinstance(download, str) else src
     link = f'\n<a href="{target}" download style="{LINK}">Download</a>' if download else ''
     return f"""<figure style="margin: 0; display: flex; flex-direction: column; gap: 4px">
-<img src="{src}" alt="{alt}" loading="lazy" style="display: block; width: 100%; aspect-ratio: {ratio}; object-fit: cover; object-position: {pos}">
+<img src="{src}" alt="{alt}" loading="lazy"{' class="' + cls + '"' if cls else ''} style="display: block; width: 100%; aspect-ratio: {ratio}; object-fit: cover; object-position: {pos}">
 <figcaption style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 24px; font-size: 15px; line-height: 22px; color: {MUTED}">
 <span style="padding: 11px 0">{caption}</span>{link}
 </figcaption>
@@ -470,7 +485,7 @@ def menu(current):
 PAGES_WRITTEN = []
 
 
-def page(path, title, description, header, main, current=None, og_type='website'):
+def page(path, title, description, header, main, current=None, og_type='website', head_extra=''):
     """Wrap a header and its main content in the full page and write it to public/<path>/index.html."""
     canonical = f'{BASE}{path}'
     doc = f"""<!doctype html>
@@ -491,7 +506,7 @@ def page(path, title, description, header, main, current=None, og_type='website'
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/cardo-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
-<link rel="alternate" type="application/rss+xml" title="Kellum Jones: writing" href="/writing/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Kellum Jones: writing" href="/writing/feed.xml">{head_extra}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -524,6 +539,7 @@ def page(path, title, description, header, main, current=None, og_type='website'
 def build_home():
     header = f"""<header id="top" class="d-hero on-dark" style="position: relative; display: flex; flex-direction: column; background: {BACKDROP}; color: {EGG}; overflow: hidden">
 <img class="d-hero-img" src="{IMG['hero']}" alt="Kellum Jones leaning on a white plinth against a dark backdrop" fetchpriority="high">
+<div class="d-hero-fade" aria-hidden="true"></div>
 <svg class="d-bow" aria-hidden="true" viewBox="0 0 118 1000" fill="none" stroke="{EGG}" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
 {BOW_G}
 </svg>
@@ -572,22 +588,21 @@ def build_home():
 {split(f'<h2 style="{H2}">Performances</h2>' + chr(10) + f'<a href="{URL["perf"]}" style="{LINK}">All performances and recordings</a>', upcoming_rows(2, 2), sec_id='performances')}
 
 {NEWSLETTER}"""
-    page('/', 'Kellum Jones, double bass', 'Kellum Jones is a double bassist and teacher based in Columbus, Georgia. Performances, lessons, and writing on practice and the German bow.', header, main, current='home')
+    page('/', 'Kellum Jones, double bass', 'Kellum Jones is a double bassist and teacher based in Columbus, Georgia. Performances, lessons, and writing on practice and the German bow.', header, main, current='home', head_extra='\n' + structured_data())
 
 
 # ------------------------------------------------------------------ Biography
 def build_bio():
+    bio_paras = '\n'.join(f'<p style="{P}">{t}</p>' for t in BIO_PARAS)
     main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap-reverse; align-items: flex-end; gap: 48px clamp(32px, 10cqw, 128px)">
 <div style="flex: 7 1 420px; display: flex; flex-direction: column; gap: 24px">
-<p style="{LEAD}">Kellum Jones is a double bassist based in Columbus, Georgia, building a career as a soloist and teacher.</p>
-<p style="{P}">He studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, and has taken summer lessons with the soloist Mikyung Sung. He plays the German bow in the Viennese tradition of Ludwig Streicher.</p>
-<p style="{P}">[Performance highlights: two or three sentences on recitals, concerto appearances, competitions and festivals.]</p>
-<p style="{P}">Kellum is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he teaches beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob.</p>
-<p style="{P}">With the pianist Hsin Yeh he performs as Understory Duo, which commissions new work for double bass and piano from living composers. He writes about practice and the German bow in the notebook on this site.</p>
+<p style="{LEAD}">{BIO_LEAD}</p>
+{bio_paras}
 <a href="{URL['contact']}" style="{LINK}">Get in touch</a>
 </div>
 <div class="p-rise" style="position: relative; flex: 4 1 300px; max-width: 480px">
-{photo(IMG['bw'], 'Black and white portrait of Kellum Jones', '2 / 3', f'Photo: {PHOTOGRAPHER}', download=False)}
+{photo(IMG['lean'], 'Kellum Jones leaning forward on a white plinth', '2 / 3', f'Photo: {PHOTOGRAPHER}', '50% 40%', download=False)}
+{FADE}
 </div>
 </section>
 
@@ -595,8 +610,8 @@ def build_bio():
 <div class="p-bleed-r" style="box-sizing: border-box; background: {RAISED}; {PANEL_PAD_R}; display: flex; flex-direction: column; gap: 16px; align-items: flex-start">
 <span style="{META}">For concert programs</span>
 <h2 style="{H2S}">Short biography</h2>
-<p style="margin: 0; max-width: 680px">Kellum Jones is a double bassist based in Columbus, Georgia. He studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra and performs with the pianist Hsin Yeh as Understory Duo, commissioning new work for double bass and piano from living composers.</p>
-<a href="{PRESS_KIT}" style="{LINK}">Download press kit</a>
+<p style="margin: 0; max-width: 680px">{BIO_SHORT}</p>
+<a href="{PRESS_KIT}" download style="{LINK}">Download press kit</a>
 </div>
 </section>
 
@@ -607,13 +622,17 @@ def build_bio():
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px 32px">
 <div style="flex: 7 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 48px">
-{photo(IMG['hero'], 'Kellum Jones leaning on a white plinth against a dark backdrop', '3 / 2', 'Color, landscape', '50% 30%', download='/images/press/kellum-jones-leaning-on-hand.jpg')}
+{photo(IMG['hero'], 'Kellum Jones leaning on a white plinth, head resting on his hand', '3 / 2', 'Landscape, dark backdrop', '50% 30%', download=PRESS + 'kellum-jones-leaning-on-hand.jpg')}
 <div class="p-indent">
-{photo(IMG['think'], 'Kellum Jones resting his chin on his hand', '3 / 2', 'Color, landscape', download='/images/press/kellum-jones-chin-on-hand.jpg')}
+{photo(IMG['think'], 'Kellum Jones resting his chin on his hand', '3 / 2', 'Landscape, dark backdrop', download=PRESS + 'kellum-jones-chin-on-hand.jpg')}
+</div>
+<div style="max-width: 62%">
+{photo(IMG['lean'], 'Kellum Jones leaning forward on a white plinth', '2 / 3', 'Portrait, dark backdrop', '50% 40%', download=PRESS + 'kellum-jones-leaning-forward.jpg')}
 </div>
 </div>
-<div class="h-drop" style="flex: 4 1 260px; min-width: 0">
-{photo(IMG['bw'], 'Black and white portrait of Kellum Jones', '2 / 3', 'Black and white, portrait')}
+<div class="h-drop" style="flex: 4 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 48px">
+{photo(IMG['stand'], 'Kellum Jones standing in a camel coat, looking at the camera', '2 / 3', 'Portrait, grey backdrop', download=PRESS + 'kellum-jones-standing.jpg')}
+{photo(IMG['up'], 'Kellum Jones standing in a camel coat, looking up', '2 / 3', 'Portrait, grey backdrop', download=PRESS + 'kellum-jones-standing-looking-up.jpg')}
 </div>
 </div>
 </section>"""
@@ -624,7 +643,7 @@ def build_bio():
 def build_perf():
     vids = PERF.get('videos', [])
     v = (vids + [None, None, None])[:3]
-    main = f"""{split(f'<h2 style="{H2}">Upcoming</h2>', upcoming_rows(50, 3), sec_id='upcoming', first=True)}
+    main = f"""{split(f'<h2 style="{H2}">Upcoming</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3), sec_id='upcoming', first=True)}
 
 <section id="watch" style="{WRAP}; {SECPAD}; display: flex; flex-direction: column; gap: 48px">
 <h2 style="{H2}">Watch and listen</h2>
@@ -676,6 +695,7 @@ def build_teach():
 </div>
 <div class="p-rise" style="position: relative; flex: 4 1 300px; max-width: 480px">
 <img src="{IMG['think']}" alt="Kellum Jones resting his chin on his hand" style="display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 35% 50%">
+{FADE}
 </div>
 </section>
 
@@ -804,6 +824,7 @@ def build_duo():
 </div>
 <div class="p-rise" style="position: relative; flex: 6 1 380px">
 <img src="{IMG['duo']}" alt="Kellum Jones and Hsin Yeh of Understory Duo" style="display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 75% 50%">
+{FADE}
 </div>
 </section>
 
@@ -847,8 +868,11 @@ def build_contact():
         form_open = f'<form action="mailto:{esc(EMAIL)}" method="post" enctype="text/plain" data-mailto="{esc(EMAIL)}"'
     else:
         form_open = '<form action="#main" method="get"'
-    main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 64px clamp(32px, 10cqw, 128px)">
-<div style="flex: 5 1 300px; display: flex; flex-direction: column; gap: 40px">
+    main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 64px clamp(32px, 5cqw, 64px)">
+<div class="c-photo" style="flex: 3 1 240px; min-width: 0">
+<img class="feather" src="{IMG['stand']}" alt="Kellum Jones standing in a camel coat, looking at the camera" loading="lazy" style="display: block; width: 100%; max-width: 420px; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 10%">
+</div>
+<div style="flex: 4 1 260px; display: flex; flex-direction: column; gap: 40px">
 {reach('Concerts', 'Booking and programs', 'Recitals, concertos, chamber music and school visits.')}
 {reach('Lessons', 'Study with me', 'In person in Columbus, Georgia, and online.')}
 <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start; padding-top: 24px; border-top: {RULE}">
@@ -860,7 +884,7 @@ def build_contact():
 </div>
 </div>
 </div>
-{form_open} class="h-drop" style="flex: 6 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+{form_open} class="h-drop" style="flex: 5 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
 <h2 style="{H2S}">Send a message</h2>
 <div style="display: flex; flex-wrap: wrap; gap: 24px 16px">
 <div style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 8px">
@@ -936,6 +960,41 @@ def build_extras():
     write('_headers', '/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/images/*\n  Cache-Control: public, max-age=604800\n/css/*\n  Cache-Control: public, max-age=3600\n/js/*\n  Cache-Control: public, max-age=3600\n')
 
 
+def build_press_kit():
+    """Write press/kellum-jones-press-kit.zip: both biographies as text, plus the press photos."""
+    import zipfile
+    finished = [t for t in BIO_PARAS if not t.startswith('[')]     # leave unfinished paragraphs out
+    credit = SITE.get('photographer', '').strip()
+    text = '\n'.join([
+        'KELLUM JONES, double bass', BASE, '',
+        'SHORT BIOGRAPHY (for concert programs)', '', BIO_SHORT, '', '',
+        'BIOGRAPHY', '', BIO_LEAD, '', '\n\n'.join(finished), '', '',
+        'PHOTOS', '', 'Free to use for press and concert programs.' + (f' Please credit {credit}.' if credit else ''), '',
+        'CONTACT', '', SITE.get('email', '').strip() or f'{BASE}/contact/', '',
+    ])
+    folder = os.path.join(ROOT, 'assets', 'images', 'press')
+    target = os.path.join(OUT, KIT_URL.strip('/'))
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    fixed = (2026, 1, 1, 0, 0, 0)       # a fixed date, so the file only changes when its contents do
+    with zipfile.ZipFile(target, 'w') as z:
+        z.writestr(zipfile.ZipInfo('kellum-jones-press-kit/biography.txt', fixed), text, zipfile.ZIP_DEFLATED)
+        for name in sorted(os.listdir(folder)):
+            with open(os.path.join(folder, name), 'rb') as f:
+                z.writestr(zipfile.ZipInfo(f'kellum-jones-press-kit/photos/{name}', fixed), f.read(), zipfile.ZIP_STORED)
+
+
+def structured_data():
+    """A short description of Kellum for search engines, placed on the home page."""
+    same = [u for u in (SITE.get('youtube', '').strip(), SITE.get('instagram', '').strip()) if u]
+    data = {'@context': 'https://schema.org', '@type': 'Person', 'name': 'Kellum Jones', 'jobTitle': 'Double bassist',
+            'url': BASE + '/', 'image': BASE + IMG['hero'], 'description': BIO_SHORT,
+            'address': {'@type': 'PostalAddress', 'addressLocality': 'Columbus', 'addressRegion': 'GA', 'addressCountry': 'US'},
+            'memberOf': {'@type': 'MusicGroup', 'name': 'Understory Duo', 'url': BASE + URL['duo']}}
+    if same:
+        data['sameAs'] = same
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace('</', '<\\/') + '</script>'
+
+
 def copy_assets():
     for name in ('css', 'js', 'fonts', 'images'):
         shutil.copytree(os.path.join(ROOT, 'assets', name), os.path.join(OUT, name), dirs_exist_ok=True)
@@ -960,9 +1019,11 @@ def report_placeholders():
 
 
 if __name__ == '__main__':
-    if os.path.isdir(OUT):
-        shutil.rmtree(OUT)
-    os.makedirs(OUT)
+    # empty public/ without removing the folder itself, so a local preview server keeps working
+    os.makedirs(OUT, exist_ok=True)
+    for entry in os.listdir(OUT):
+        path = os.path.join(OUT, entry)
+        shutil.rmtree(path) if os.path.isdir(path) else os.remove(path)
     copy_assets()
     build_home()
     build_bio()
@@ -974,6 +1035,7 @@ if __name__ == '__main__':
     build_contact()
     build_404()
     build_extras()
+    build_press_kit()
     print(f'Built {len(PAGES_WRITTEN)} pages into public/')
     if '--check' in sys.argv:
         report_placeholders()

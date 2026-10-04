@@ -28,7 +28,8 @@ then open http://localhost:8000.
 | `content/site.json` | Email, YouTube and Instagram links, photographer credit, press kit link, the signup text, form addresses |
 | `content/performances.json` | Upcoming performances, past performances, videos |
 | `content/posts/` | One Markdown file per post |
-| `assets/images/` | Photos |
+| `assets/images/` | Photos as shown on the pages (about 1600 pixels on the long side) |
+| `assets/images/press/` | Larger copies offered as downloads on the Biography page and packed into the press kit |
 | `assets/css/site.css` | Fonts, page basics, the menu, and the styles for post text |
 | `assets/js/site.js` | Menu behavior and the contact form hand-off. The site works without it |
 | `build.py` | The page templates and the fixed text of each page (biography, teaching, duo, contact) |
@@ -104,8 +105,7 @@ With that set up, every push to `main` publishes whatever is in `public/`. So th
 
 Run `python3 build.py --check`. It lists every bracketed placeholder still on the site and every empty setting in `content/site.json`. The site is ready when that list is empty. The main items:
 
-- [ ] Replace the photos in `assets/images/` with the full-size originals (the current ones are low-resolution stand-ins), keeping the same file names
-- [ ] Fill in `content/site.json`: email, YouTube, Instagram, photographer, press kit link
+- [ ] Fill in `content/site.json`: email, YouTube, Instagram, photographer
 - [ ] Set `newsletter_action` in `content/site.json` to the form address from the email newsletter service. Until then the signup form only leads to the contact page
 - [ ] Read and correct the biography, short biography and teaching text in `build.py` (they are drafts)
 - [ ] Finish the Understory Duo text: the education sentence, the name, Hsin's biography, commissions
@@ -113,6 +113,20 @@ Run `python3 build.py --check`. It lists every bracketed placeholder still on th
 - [ ] Write the first posts and give them dates
 
 The contact form opens the visitor's mail app with the message filled in. To have messages sent from the page instead, set `contact_form_action` in `content/site.json` to the address a form service gives you.
+
+## Photos
+
+Photos are lightly retouched (skin only) and saved at 86 dpi or less. Each photo exists twice: a page copy in `assets/images/` and a larger copy in `assets/images/press/`. To replace one, save the new file under the same name in both places and rebuild.
+
+Photos are blended into the page in three ways, all in `assets/css/site.css`:
+
+- The header band uses the color of the dark studio backdrop (`#081918`), and a photo that rises into the band fades into it along its top and sides (`.p-fade`).
+- On a phone, the bottom of the home photo fades into the band that holds the name (`.d-hero-fade`).
+- Photos with the grey backdrop keep crisp top and side edges and dissolve into the eggshell ground at the bottom (`.feather`).
+
+## Press kit
+
+Every build writes `public/press/kellum-jones-press-kit.zip`: both biographies as a text file, plus everything in `assets/images/press/`. Unfinished biography paragraphs (the ones still in square brackets) are left out. To use a different file, set `press_kit` in `content/site.json` to its address.
 
 ## Design
 

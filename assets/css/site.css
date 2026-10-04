@@ -40,6 +40,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* Inner page header band. */
 .p-band { min-height: 440px; }
 
+/* Blending photos into the page.
+   .p-fade sits over the part of a rising photo that overlaps the dark band and melts its top and sides into the band.
+   .d-hero-fade does the same for the bottom of the home photo on a phone.
+   .feather lets the bottom of a light-backdrop photo dissolve into the eggshell ground; its top and sides stay crisp. */
+.p-fade { position: absolute; top: 0; left: 0; right: 0; height: 200px; pointer-events: none;
+  background:
+    linear-gradient(to bottom, #081918 0%, rgba(8, 25, 24, 0) 60%),
+    linear-gradient(to right, #081918 0%, rgba(8, 25, 24, 0) 16%),
+    linear-gradient(to left, #081918 0%, rgba(8, 25, 24, 0) 16%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 72%, transparent 100%); }
+.d-hero-fade { display: none; }
+.feather {
+  -webkit-mask-image: linear-gradient(to top, transparent 0, rgba(0, 0, 0, 0.15) 8%, rgba(0, 0, 0, 0.6) 18%, #000 30%);
+          mask-image: linear-gradient(to top, transparent 0, rgba(0, 0, 0, 0.15) 8%, rgba(0, 0, 0, 0.6) 18%, #000 30%); }
+
 /* Offsets that make the layout slightly asymmetric on wide screens. */
 .h-drop { margin-top: 104px; }
 .h-drop-lg { margin-top: 200px; }
@@ -54,11 +70,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .h-drop, .h-drop-lg, .h-pull, .p-rise { margin-top: 0; }
   .h-news { margin-right: 0; }
   .p-bleed-r, .p-indent { margin-left: 0; }
+  .p-fade, .wide-only { display: none !important; }
+  .c-photo { order: 3; }
 }
 @container (max-width: 760px) {
   .d-hero { min-height: 0; }
   .d-hero-img { position: relative; height: 440px; object-position: 78% 0; }
   .d-bow { top: 456px; left: auto; right: 36px; height: calc(100% - 472px); }
+  .d-hero-fade { display: block; position: absolute; left: 0; right: 0; top: 300px; height: 141px; pointer-events: none; background: linear-gradient(to bottom, rgba(8, 25, 24, 0) 0%, #081918 100%); }
 }
 
 /* The home bow fades in once on load. */
@@ -70,7 +89,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* Menu: a full-screen sheet. Works from the link alone (:target); site.js adds focus handling. */
 .menu { display: none; position: fixed; inset: 0; z-index: 100; background: #f0ead6; overflow: auto; }
 .menu:target, .menu.is-open { display: flex; }
-.menu-photo { position: relative; flex: 0 0 44%; background: #0a1717; overflow: hidden; }
+.menu-photo { position: relative; flex: 0 0 44%; background: #081918; overflow: hidden; }
 .menu-photo img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 80% 20%; }
 .menu-nav { flex: 1 1 0; min-width: 0; min-height: 100%; box-sizing: border-box; padding: 22px 32px 32px 72px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
 .menu-top { display: flex; justify-content: space-between; align-items: center; }
