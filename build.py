@@ -96,7 +96,7 @@ KIT_URL = '/press/kellum-jones-press-kit.zip'
 EMAIL = SITE.get('email', '').strip()
 EMAIL_LABEL = esc(EMAIL) if EMAIL else '[your email address]'
 EMAIL_HREF = f'mailto:{esc(EMAIL)}' if EMAIL else URL['contact']
-YOUTUBE = esc(SITE.get('youtube', '').strip()) or URL['perf']
+YOUTUBE = esc(SITE.get('youtube', '').strip())      # empty until there is a channel: the YouTube links and the video section stay off the site
 INSTAGRAM = esc(SITE.get('instagram', '').strip()) or URL['contact']
 PRESS_KIT = esc(SITE.get('press_kit', '').strip()) or KIT_URL
 PHOTOGRAPHER = esc(SITE.get('photographer', '').strip()) or '[photographer]'
@@ -104,6 +104,12 @@ REPLY_TIME = esc(SITE.get('reply_time', '').strip()) or '[a few days]'
 NEWS_TEXT = esc(SITE.get('newsletter_text', '').strip()) or 'Posts on practice, the German bow and new music for bass.'
 NEWS_ACTION = esc(SITE.get('newsletter_action', '').strip())
 FORM_ACTION = esc(SITE.get('contact_form_action', '').strip())
+HAS_VIDEO = bool(YOUTUBE or PERF.get('videos'))
+
+
+def yt_link(style, label='YouTube'):
+    """A link to the YouTube channel, or nothing while there is no channel."""
+    return f'<a href="{YOUTUBE}" style="{style}">{label}</a>' if YOUTUBE else ''
 
 # ------------------------------------------------------------------ drawings
 BOW_G = """<g transform="matrix(0 1 1 0 10 0)">
@@ -192,7 +198,7 @@ FOOTER = f"""<footer class="on-dark" style="margin-top: auto; padding-top: clamp
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 32px; padding-top: 16px; border-top: 1px solid #4a463b">
 <div style="display: flex; flex-wrap: wrap; gap: 0 32px">
 <a href="{EMAIL_HREF}" style="{LINK}; color: {FOOT}">{EMAIL_LABEL}</a>
-<a href="{YOUTUBE}" style="{LINK}; color: {FOOT}">YouTube</a>
+{yt_link(f'{LINK}; color: {FOOT}')}
 <a href="{INSTAGRAM}" style="{LINK}; color: {FOOT}">Instagram</a>
 <a href="{PRESS_KIT}" style="{LINK}; color: {FOOT}">Download press kit</a>
 </div>
@@ -475,7 +481,7 @@ def menu(current):
 </div>
 <div class="menu-foot">
 <a href="{EMAIL_HREF}">{EMAIL_LABEL}</a>
-<a href="{YOUTUBE}">YouTube</a>
+{f'<a href="{YOUTUBE}">YouTube</a>' if YOUTUBE else ''}
 <a href="{INSTAGRAM}">Instagram</a>
 </div>
 </nav>
@@ -585,7 +591,7 @@ def build_home():
 </div>
 </section>
 
-{split(f'<h2 style="{H2}">Performances</h2>' + chr(10) + f'<a href="{URL["perf"]}" style="{LINK}">All performances and recordings</a>', upcoming_rows(2, 2), sec_id='performances')}
+{split(f'<h2 style="{H2}">Performances</h2>' + chr(10) + f'<a href="{URL["perf"]}" style="{LINK}">{"All performances and recordings" if HAS_VIDEO else "All performances"}</a>', upcoming_rows(2, 2), sec_id='performances')}
 
 {NEWSLETTER}"""
     page('/', 'Kellum Jones, double bass', 'Kellum Jones is a double bassist and teacher based in Columbus, Georgia. Performances, lessons, and writing on practice and the German bow.', header, main, current='home', head_extra='\n' + structured_data())
@@ -643,9 +649,7 @@ def build_bio():
 def build_perf():
     vids = PERF.get('videos', [])
     v = (vids + [None, None, None])[:3]
-    main = f"""{split(f'<h2 style="{H2}">Upcoming</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3), sec_id='upcoming', first=True)}
-
-<section id="watch" style="{WRAP}; {SECPAD}; display: flex; flex-direction: column; gap: 48px">
+    watch = f"""<section id="watch" style="{WRAP}; {SECPAD}; display: flex; flex-direction: column; gap: 48px">
 <h2 style="{H2}">Watch and listen</h2>
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px 32px">
 <div style="flex: 7 1 420px; min-width: 0">
@@ -654,15 +658,18 @@ def build_perf():
 <div class="h-drop" style="flex: 4 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 32px">
 {video(v[1])}
 {video(v[2])}
-<a href="{YOUTUBE}" style="{LINK}; align-self: flex-start">More on YouTube</a>
+{yt_link(f'{LINK}; align-self: flex-start', 'More on YouTube')}
 </div>
 </div>
-</section>
+</section>""" if HAS_VIDEO else ''
+    main = f"""{split(f'<h2 style="{H2}">Upcoming</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3), sec_id='upcoming', first=True)}
+
+{watch}
 
 {split(f'<h2 style="{H2}">Past performances</h2>', past_block(), sec_id='past')}
 
 {cta('Booking', 'For recitals, concertos, chamber music and school visits, write with the date and the kind of program you have in mind.', 'Get in touch')}"""
-    page(URL['perf'], 'Performances · Kellum Jones', 'Upcoming and past performances by double bassist Kellum Jones, with video.', band('<span>Performances</span>', mark='fermata'), main, current='perf')
+    page(URL['perf'], 'Performances · Kellum Jones', 'Upcoming and past performances by double bassist Kellum Jones' + (', with video.' if HAS_VIDEO else '.'), band('<span>Performances</span>', mark='fermata'), main, current='perf')
 
 
 # ------------------------------------------------------------------ Teaching
@@ -878,7 +885,7 @@ def build_contact():
 <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start; padding-top: 24px; border-top: {RULE}">
 <span style="{META}">Elsewhere</span>
 <div style="display: flex; flex-wrap: wrap; gap: 0 32px">
-<a href="{YOUTUBE}" style="{LINK}">YouTube</a>
+{yt_link(LINK)}
 <a href="{INSTAGRAM}" style="{LINK}">Instagram</a>
 <a href="{URL['duo']}" style="{LINK}">Understory Duo</a>
 </div>
@@ -1012,9 +1019,11 @@ def report_placeholders():
             print(f'\n{path}')
             for f in found:
                 print(f'  {f}')
-    for key in ('email', 'youtube', 'instagram', 'photographer', 'press_kit', 'newsletter_action'):
+    for key in ('email', 'instagram', 'photographer', 'newsletter_action'):
         if not SITE.get(key, '').strip():
             print(f'\ncontent/site.json: "{key}" is empty')
+    if not HAS_VIDEO:
+        print('\ncontent/site.json: "youtube" is empty, so the YouTube links and the video section are left off the site')
     print(f'\n{total} placeholders left across {len(PAGES_WRITTEN)} pages.')
 
 
