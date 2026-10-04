@@ -1,0 +1,111 @@
+/* kellumjones.com
+   Eggshell ground, black ink, oxblood accent. Cardo for display, Jost for text.
+   Most layout is written inline in the templates (build.py); this file holds
+   fonts, page basics, the helpers that need container queries, the menu and
+   the styles for post bodies written in Markdown. */
+
+@font-face { font-family: Cardo; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/cardo-regular.woff2) format('woff2'); }
+@font-face { font-family: Cardo; font-style: italic; font-weight: 400; font-display: swap; src: url(/fonts/cardo-italic.woff2) format('woff2'); }
+@font-face { font-family: Jost; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/jost-latin-wght.woff2) format('woff2'); }
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #f0ead6;
+  color: #000807;
+  font-family: Jost, Futura, 'Century Gothic', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 30px;
+}
+img { max-width: 100%; }
+
+a { color: #7a2531; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { color: #000807; text-decoration-thickness: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #7a2531; outline-offset: 2px; }
+.on-dark a:focus-visible, .on-dark button:focus-visible, .on-dark input:focus-visible { outline-color: #f0ead6; }
+.btn:hover { opacity: 0.86; }
+
+.skip { position: absolute; left: 16px; top: -64px; z-index: 200; padding: 10px 16px; background: #000807; color: #f0ead6; }
+.skip:focus { top: 16px; color: #f0ead6; }
+
+/* The page is a size container so sections respond to its width. */
+.page { container-type: inline-size; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* Home header: the photo sits behind the name, the bow stands beside it. */
+.d-hero { min-height: 760px; }
+.d-hero-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 20%; }
+.d-bow { position: absolute; top: 32px; left: 32%; height: calc(100% - 64px); transform: rotate(7deg); pointer-events: none; }
+.d-bow * { vector-effect: non-scaling-stroke; }
+
+/* Inner page header band. */
+.p-band { min-height: 440px; }
+
+/* Offsets that make the layout slightly asymmetric on wide screens. */
+.h-drop { margin-top: 104px; }
+.h-drop-lg { margin-top: 200px; }
+.h-pull { margin-top: -104px; }
+.p-rise { margin-top: -280px; }
+.h-news { margin-right: 18cqw; }
+.p-bleed-r { margin-left: 18cqw; }
+.p-indent { margin-left: 20%; }
+
+@container (max-width: 919px) {
+  .p-band { min-height: 0; }
+  .h-drop, .h-drop-lg, .h-pull, .p-rise { margin-top: 0; }
+  .h-news { margin-right: 0; }
+  .p-bleed-r, .p-indent { margin-left: 0; }
+}
+@container (max-width: 760px) {
+  .d-hero { min-height: 0; }
+  .d-hero-img { position: relative; height: 440px; object-position: 78% 0; }
+  .d-bow { top: 456px; left: auto; right: 36px; height: calc(100% - 472px); }
+}
+
+/* The home bow fades in once on load. */
+@media (prefers-reduced-motion: no-preference) {
+  .d-bow { opacity: 0; animation: bow-in 0.9s ease-out 0.2s forwards; }
+}
+@keyframes bow-in { to { opacity: 1; } }
+
+/* Menu: a full-screen sheet. Works from the link alone (:target); site.js adds focus handling. */
+.menu { display: none; position: fixed; inset: 0; z-index: 100; background: #f0ead6; overflow: auto; }
+.menu:target, .menu.is-open { display: flex; }
+.menu-photo { position: relative; flex: 0 0 44%; background: #0a1717; overflow: hidden; }
+.menu-photo img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 80% 20%; }
+.menu-nav { flex: 1 1 0; min-width: 0; min-height: 100%; box-sizing: border-box; padding: 22px 32px 32px 72px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.menu-top { display: flex; justify-content: space-between; align-items: center; }
+.menu-top a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #000807; text-decoration: none; }
+.menu-name { font-family: Cardo, Georgia, serif; font-size: 26px; line-height: 32px; }
+.menu-close { padding: 0 4px; font-size: 15px; line-height: 20px; font-weight: 500; }
+.menu-links { display: flex; flex-direction: column; align-items: flex-start; }
+.menu-links a { display: inline-flex; align-items: center; min-height: 62px; box-sizing: border-box; color: #000807; text-decoration: none; font-family: Cardo, Georgia, serif; font-size: clamp(32px, 4.2vw, 44px); line-height: 1.18; border-bottom: 2px solid transparent; }
+.menu-links a:hover { border-bottom-color: #b7b09a; }
+.menu-links a[aria-current="page"] { border-bottom-color: #7a2531; }
+.menu-foot { display: flex; flex-wrap: wrap; gap: 0 32px; }
+.menu-foot a { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; line-height: 20px; font-weight: 500; }
+@media (max-width: 860px) {
+  .menu-photo { display: none; }
+  .menu-nav { padding: 22px 16px 24px; }
+}
+@media (max-height: 640px) {
+  .menu-links a { min-height: 48px; font-size: 30px; }
+}
+
+/* Post bodies come from Markdown, so they are styled here rather than inline. */
+.prose { display: flex; flex-direction: column; gap: 28px; }
+.prose > * { margin: 0; }
+.prose p, .prose ul, .prose ol { max-width: 640px; font-size: 19px; line-height: 32px; }
+.prose ul, .prose ol { padding-left: 1.2em; }
+.prose li + li { margin-top: 8px; }
+.prose h2 { margin-top: 20px; max-width: 720px; font-family: Cardo, Georgia, serif; font-size: 32px; line-height: 38px; font-weight: 400; }
+.prose h3 { margin-top: 8px; max-width: 720px; font-family: Cardo, Georgia, serif; font-size: 26px; line-height: 32px; font-weight: 400; }
+.prose blockquote { margin: 12px 0 12px clamp(0px, 8cqw, 104px); max-width: 620px; font-family: Cardo, Georgia, serif; font-style: italic; font-size: clamp(28px, 3cqw, 38px); line-height: 1.25; }
+.prose blockquote p { margin: 0; max-width: none; font-size: inherit; line-height: inherit; }
+.prose img, .prose figure, .prose .video { display: block; max-width: min(820px, 100%); margin-top: 12px; margin-bottom: 12px; }
+.prose figcaption { margin-top: 12px; font-size: 15px; line-height: 22px; color: #5c584b; }
+.prose hr { width: 100%; max-width: 640px; border: 0; border-top: 1px solid #b7b09a; }
+.prose code { font-size: 0.9em; }
+
+@media print {
+  .menu, .skip { display: none !important; }
+}
