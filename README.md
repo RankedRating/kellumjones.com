@@ -77,7 +77,8 @@ Edit `content/performances.json`. Dates are written year-month-day.
 {
   "upcoming": [
     {"date": "2026-11-14", "composer": "Giovanni Bottesini", "work": "Concerto No. 2 in B minor",
-     "with": "Hsin Yeh, piano", "venue": "Legacy Hall, Columbus", "time": "7:30 pm", "link": "https://example.com/tickets"}
+     "with": "Hsin Yeh, piano", "venue": "Legacy Hall, Columbus", "time": "7:30 pm",
+     "admission": "Free admission", "link": "https://example.com/tickets"}
   ],
   "past": [
     {"date": "2026-03-02", "composer": "J.S. Bach", "work": "Suite No. 3", "venue": "Studio Theatre, Columbus"}
@@ -88,7 +89,7 @@ Edit `content/performances.json`. Dates are written year-month-day.
 }
 ```
 
-The home page shows the next two upcoming performances. The "Watch and listen" section and every YouTube link stay off the site until `youtube` is set in `content/site.json` or a video is added here; after that they appear on the next build. The first video is shown large. When a list is empty the page shows bracketed placeholders, so the layout can be judged before the real dates exist. When a performance has happened, move it from `upcoming` to `past`.
+`time`, `with`, `admission` and `link` are optional; leave any of them out and the row simply omits it. The home page shows the next two upcoming performances. The "Watch and listen" section and every YouTube link stay off the site until `youtube` is set in `content/site.json` or a video is added here; after that they appear on the next build. The first video is shown large. When a list is empty the page shows bracketed placeholders, so the layout can be judged before the real dates exist. When a performance has happened, move it from `upcoming` to `past`.
 
 ## Publishing
 

@@ -309,8 +309,10 @@ def perf_row(item=None, last=False):
         month = f'{MONTHS[d.month - 1][:3]} {d.year}' if d else '[Month year]'
         composer, work = esc(item.get('composer')), esc(item.get('work'))
         with_ = esc(item.get('with'))
-        where = ' · '.join(x for x in [esc(item.get('venue')), esc(item.get('time'))] if x)
+        where = ' · '.join(x for x in [esc(item.get('venue')), esc(item.get('time')).replace(' ', '&nbsp;')] if x)   # the time never breaks across lines
         link = f'<a href="{esc(item["link"])}" style="{LINK}">Tickets and details</a>' if item.get('link') else ''
+        if item.get('admission'):        # for example "Free admission"; shown above the ticket link, or in its place
+            link = f'<span style="font-size: 15px; line-height: 24px; font-weight: 500">{esc(item["admission"])}</span>' + ('\n' + link if link else '')
     else:
         day, month, composer, work = '00', '[Month year]', '[Composer]', '[Work title]'
         with_, where = '[With: pianist, orchestra or ensemble]', '[Venue, city · time]'
