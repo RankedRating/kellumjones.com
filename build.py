@@ -22,6 +22,8 @@ import sys
 
 import markdown
 
+import i18n
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, 'public')
 SITE = json.load(open(os.path.join(ROOT, 'content', 'site.json'), encoding='utf-8'))
@@ -149,11 +151,16 @@ CLOSE_ICON = '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"
 PLAY_ICON = '<svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2"><circle cx="20" cy="20" r="18"></circle><path d="M16 12 L29 20 L16 28 Z"></path></svg>'
 
 # ------------------------------------------------------------------ shared pieces
+GLOBE_ICON = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"></circle><ellipse cx="10" cy="10" rx="3.6" ry="8.5"></ellipse><line x1="1.5" y1="10" x2="18.5" y2="10"></line></svg>'
+# %%...%% markers are filled in per language when the pages are written out (see emit_pages)
+LANG_BUTTON = f'<a href="#languages" class="lang-btn" aria-label="Language" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; color: {EGG}; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500">{GLOBE_ICON}<span class="lang-name" translate="no">%%LANG_NAME%%</span></a>'
 MENU_BUTTON = f'<a href="#menu" data-menu-open aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 4px; color: {EGG}; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><span>Menu</span>{MENU_ICON}</a>'
 
+TOP_RIGHT = f'<div style="display: flex; align-items: center; gap: clamp(8px, 2cqw, 24px)">{LANG_BUTTON}{MENU_BUTTON}</div>'
+
 TOPBAR = f"""<div style="position: relative; {WRAP}; padding: 22px {PAD} 0; display: flex; justify-content: space-between; align-items: center; gap: 16px">
-<a href="{URL['home']}" style="display: inline-flex; align-items: center; min-height: 44px; color: {EGG}; text-decoration: none; font-family: {SERIF}; font-size: 26px; line-height: 32px">Kellum Jones</a>
-{MENU_BUTTON}
+<a href="{URL['home']}" style="display: inline-flex; align-items: center; min-height: 44px; color: {EGG}; text-decoration: none; font-family: {SERIF}; font-size: 26px; line-height: 32px" translate="no">Kellum Jones</a>
+{TOP_RIGHT}
 </div>"""
 
 
@@ -178,7 +185,7 @@ FOOTER = f"""<footer class="on-dark" style="margin-top: auto; padding-top: clamp
 <div style="background: {INK}; color: {EGG}">
 <div style="{WRAP}; padding: 72px {PAD} 28px; display: flex; flex-direction: column; gap: 56px">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px 64px">
-<a href="{URL['home']}" style="display: flex; flex-direction: column; color: {EGG}; text-decoration: none; font-family: {SERIF}; font-size: clamp(64px, 8cqw, 104px); line-height: 0.92; letter-spacing: -0.02em">
+<a href="{URL['home']}" style="display: flex; flex-direction: column; color: {EGG}; text-decoration: none; font-family: {SERIF}; font-size: clamp(64px, 8cqw, 104px); line-height: 0.92; letter-spacing: -0.02em" translate="no">
 <span>Kellum</span>
 <span>Jones</span>
 </a>
@@ -195,6 +202,9 @@ FOOTER = f"""<footer class="on-dark" style="margin-top: auto; padding-top: clamp
 </div>
 </nav>
 </div>
+<nav id="languages" class="langs" aria-label="Language" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; margin-bottom: -40px; padding-top: 16px; border-top: 1px solid #4a463b">
+%%LANG_LINKS%%
+</nav>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 32px; padding-top: 16px; border-top: 1px solid #4a463b">
 <div style="display: flex; flex-wrap: wrap; gap: 0 32px">
 <a href="{EMAIL_HREF}" style="{LINK}; color: {FOOT}">{EMAIL_LABEL}</a>
@@ -398,7 +408,7 @@ def read_post(path):
     slug = re.sub(r'^\d+-', '', name)
     words = len(re.findall(r'\w+', body))
     return {
-        'slug': slug, 'order': order, 'url': f'/writing/{slug}/',
+        'file': os.path.basename(path), 'slug': slug, 'order': order, 'url': f'/writing/{slug}/',
         'title': meta.get('title', slug), 'topic': meta.get('topic', ''),
         'date': parse_date(meta.get('date', '')),
         'summary': meta.get('summary', ''), 'standfirst': meta.get('standfirst', ''),
@@ -475,11 +485,14 @@ def menu(current):
 <div class="menu-photo"><img src="{IMG['hero']}" alt="" loading="lazy"></div>
 <nav class="menu-nav" aria-label="Main">
 <div class="menu-top">
-<a class="menu-name" href="{URL['home']}">Kellum Jones</a>
+<a class="menu-name" href="{URL['home']}" translate="no">Kellum Jones</a>
 <a class="menu-close" href="#top" data-menu-close aria-label="Close menu"><span>Close</span>{CLOSE_ICON}</a>
 </div>
 <div class="menu-links">
 {links}
+</div>
+<div class="menu-langs" aria-label="Language">
+%%LANG_LINKS%%
 </div>
 <div class="menu-foot">
 <a href="{EMAIL_HREF}">{EMAIL_LABEL}</a>
@@ -494,21 +507,22 @@ PAGES_WRITTEN = []
 
 
 def page(path, title, description, header, main, current=None, og_type='website', head_extra=''):
-    """Wrap a header and its main content in the full page and write it to public/<path>/index.html."""
-    canonical = f'{BASE}{path}'
+    """Wrap a header and its main content in the full page. emit_pages() writes it out once per language."""
     doc = f"""<!doctype html>
-<html lang="en">
+<html lang="%%HTML_LANG%%">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
-<link rel="canonical" href="{canonical}">
+<link rel="canonical" href="%%PAGE_URL%%">
+%%HREFLANG%%
 <meta property="og:site_name" content="Kellum Jones">
 <meta property="og:type" content="{og_type}">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
-<meta property="og:url" content="{canonical}">
+<meta property="og:url" content="%%PAGE_URL%%">
+<meta property="og:locale" content="%%OG_LOCALE%%">
 <meta property="og:image" content="{BASE}/images/og-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -536,10 +550,6 @@ def page(path, title, description, header, main, current=None, og_type='website'
 </body>
 </html>
 """
-    target = os.path.join(OUT, path.strip('/'), 'index.html') if path != '/404.html' else os.path.join(OUT, '404.html')
-    os.makedirs(os.path.dirname(target), exist_ok=True)
-    with open(target, 'w', encoding='utf-8') as f:
-        f.write(doc)
     PAGES_WRITTEN.append((path, doc))
 
 
@@ -552,10 +562,10 @@ def build_home():
 {BOW_G}
 </svg>
 <div style="position: absolute; top: 0; left: 0; right: 0; box-sizing: border-box; padding: 22px {PAD} 0; display: flex; justify-content: flex-end">
-{MENU_BUTTON}
+{TOP_RIGHT}
 </div>
 <div style="position: relative; margin: auto auto 0; box-sizing: border-box; width: 100%; max-width: 1280px; padding: 48px {PAD} 40px; display: flex; flex-direction: column; gap: 40px">
-<h1 style="margin: 0; display: flex; flex-direction: column; font-family: {SERIF}; font-size: clamp(88px, 12.5cqw, 160px); line-height: 0.9; font-weight: 400; letter-spacing: -0.02em">
+<h1 style="margin: 0; display: flex; flex-direction: column; font-family: {SERIF}; font-size: clamp(88px, 12.5cqw, 160px); line-height: 0.9; font-weight: 400; letter-spacing: -0.02em" translate="no">
 <span>Kellum</span>
 <span>Jones</span>
 </h1>
@@ -770,7 +780,7 @@ def build_posts():
             items = '\n'.join(f'<span style="font-size: 15px; line-height: 24px">{markdown.markdown(s)[3:-4]}</span>' for s in p['sources'])
             sources = f"""<div style="max-width: 640px; margin-top: 20px; padding-top: 20px; border-top: {RULE}; display: flex; flex-direction: column; gap: 4px">
 <span style="{META}">Sources and further reading</span>
-{items}
+<!--notr-->{items}<!--/notr-->
 </div>"""
         standfirst = f'\n<p style="margin: 0 0 12px; max-width: 640px; font-family: {SERIF}; font-size: clamp(24px, 2.2cqw, 28px); line-height: 1.35">{esc(p["standfirst"])}</p>' if p['standfirst'] else ''
         more = []
@@ -796,9 +806,9 @@ def build_posts():
 </div>
 <div style="flex: 9 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
 <h1 style="margin: 0; max-width: 820px; font-family: {SERIF}; font-size: clamp(44px, 5.6cqw, 72px); line-height: 1.04; font-weight: 400; letter-spacing: -0.015em">{esc(p['title'])}</h1>{standfirst}
-<div class="prose">
+<div class="prose"><!--notr--><!--post:{p['file']}-->
 {p['html']}
-</div>
+<!--/post--><!--/notr--></div>
 {END_MARK}
 {sources}
 </div>
@@ -944,6 +954,88 @@ def build_404():
     page('/404.html', 'Page not found · Kellum Jones', 'Page not found.', band('<span>Page not found</span>', mark='fermata'), main)
 
 
+# ------------------------------------------------------------------ languages
+def lang_prefix(code):
+    return '' if code == 'en' else f'/{code}'
+
+
+def lang_links(path, current):
+    """Links to this same page in every language, plus automatic translation for the rest."""
+    target = '/' if path == '/404.html' else path
+    out = []
+    for l in i18n.LANGS:
+        cur = ' aria-current="true"' if l['code'] == current else ''
+        out.append(f'<a href="{lang_prefix(l["code"])}{target}" lang="{l["tag"]}" hreflang="{l["tag"]}" translate="no"{cur}>{l["name"]}</a>')
+    auto = f'https://translate.google.com/translate?sl=en&amp;u={BASE}{target}'
+    out.append(f'<a href="{auto}" data-auto-translate rel="nofollow noopener">Other languages (automatic translation)</a>')
+    return '\n'.join(out)
+
+
+def post_translation(code, filename):
+    path = os.path.join(ROOT, 'content', 'posts', code, filename)
+    return read_post(path) if os.path.exists(path) else None
+
+
+POST_BODY = re.compile(r'<!--notr--><!--post:(.+?)-->\n(.*?)\n<!--/post--><!--/notr-->', re.S)
+
+
+def swap_post_body(doc, tr):
+    """Use the translated post file when there is one; otherwise show the English text and say so."""
+    def swap(m):
+        translated = post_translation(tr.code, m.group(1))
+        if translated:
+            return f'<!--notr-->\n{translated["html"]}\n<!--/notr-->'
+        plain = re.sub(r'\[[^\[\]]*\]', '', re.sub(r'<[^>]+>', ' ', m.group(2)))
+        if not re.search(r'\w', plain):                      # nothing written yet
+            return m.group(0)
+        notice = f'<p style="{META}">This post has not been translated yet. It is shown in English.</p>'
+        return f'{notice}\n<!--notr--><div lang="en" class="prose">\n{m.group(2)}\n</div><!--/notr-->'
+    return POST_BODY.sub(swap, doc)
+
+
+TRANSLATORS = {}
+
+
+def emit_pages():
+    """Write every page in every language."""
+    count = 0
+    for l in i18n.LANGS:
+        code = l['code']
+        tr = TRANSLATORS[code] = i18n.Translator(code)
+        if code != 'en':
+            for p in POSTS:                                  # titles and summaries of translated posts
+                t = post_translation(code, p['file'])
+                if t:
+                    for field in ('title', 'summary', 'standfirst'):
+                        if p[field] and t[field]:
+                            tr.catalog[p[field]] = t[field]
+        for path, doc in PAGES_WRITTEN:
+            if path == '/404.html' and code != 'en':
+                continue
+            target = '/' if path == '/404.html' else path
+            hreflang = '\n'.join(f'<link rel="alternate" hreflang="{x["tag"]}" href="{BASE}{lang_prefix(x["code"])}{target}">' for x in i18n.LANGS)
+            hreflang += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}{target}">'
+            out = (doc.replace('%%HTML_LANG%%', l['tag']).replace('%%OG_LOCALE%%', l['og']).replace('%%LANG_NAME%%', l['name'])
+                   .replace('%%PAGE_URL%%', f'{BASE}{lang_prefix(code)}{path}').replace('%%HREFLANG%%', hreflang)
+                   .replace('%%LANG_LINKS%%', lang_links(path, code)))
+            if code != 'en':
+                out = i18n.translate_page(swap_post_body(out, tr), tr, path)
+            write((lang_prefix(code) + (path if path == '/404.html' else path + 'index.html')).lstrip('/'), out)
+            count += 1
+    return count
+
+
+def report_translations():
+    """Say, for each language, which English text still has no translation."""
+    for l in i18n.LANGS[1:]:
+        missing = TRANSLATORS[l['code']].missing
+        print(f'\n{l["name"]} ({l["code"]}): ' + ('complete' if not missing else f'{len(missing)} not translated yet'))
+        for text, where in list(missing.items())[:12]:
+            print(f'  {where}  {text[:90]}')
+        if len(missing) > 12:
+            print(f'  ... and {len(missing) - 12} more')
+
+
 # ------------------------------------------------------------------ files beside the pages
 FAVICON = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <rect width="64" height="64" fill="{OX}"/>
@@ -967,7 +1059,7 @@ def write(path, text):
 def build_extras():
     write('favicon.svg', FAVICON)
     write('robots.txt', f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n')
-    urls = '\n'.join(f'<url><loc>{BASE}{path}</loc></url>' for path, _ in PAGES_WRITTEN if path != '/404.html')
+    urls = '\n'.join(f'<url><loc>{BASE}{lang_prefix(l["code"])}{path}</loc></url>' for l in i18n.LANGS for path, _ in PAGES_WRITTEN if path != '/404.html')
     write('sitemap.xml', f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
     items = '\n'.join(
         f'<item><title>{esc(p["title"])}</title><link>{BASE}{p["url"]}</link><guid>{BASE}{p["url"]}</guid>'
@@ -1054,8 +1146,16 @@ if __name__ == '__main__':
     build_duo()
     build_contact()
     build_404()
+    written = emit_pages()
     build_extras()
     build_press_kit()
-    print(f'Built {len(PAGES_WRITTEN)} pages into public/')
+    print(f'Built {written} pages into public/ ({len(PAGES_WRITTEN)} pages in {len(i18n.LANGS)} languages)')
+    if '--strings' in sys.argv:              # the list of English text to translate, for making a translation file
+        strings = i18n.collect_strings([(p, d.replace('%%LANG_LINKS%%', lang_links(p, 'en'))) for p, d in PAGES_WRITTEN])
+        os.makedirs(os.path.join(ROOT, 'content', 'i18n'), exist_ok=True)
+        with open(os.path.join(ROOT, 'content', 'i18n', '_english.json'), 'w', encoding='utf-8') as f:
+            json.dump(strings, f, indent=1, ensure_ascii=False)
+        print(f'Wrote {len(strings)} strings to content/i18n/_english.json')
     if '--check' in sys.argv:
         report_placeholders()
+        report_translations()

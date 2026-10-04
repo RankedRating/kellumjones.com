@@ -29,6 +29,12 @@
     if (location.hash === '#menu') open();
   }
 
+  // "Other languages": ask the automatic translator for the visitor's own language.
+  document.querySelectorAll('a[data-auto-translate]').forEach(function (a) {
+    var want = (navigator.language || '').trim();
+    if (want && !/^en\b/i.test(want)) a.href += '&tl=' + encodeURIComponent(want);
+  });
+
   // Contact form: with no form service set, hand the message to the visitor's mail app.
   var form = document.querySelector('form[data-mailto]');
   if (form) {

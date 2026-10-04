@@ -33,6 +33,8 @@ then open http://localhost:8000.
 | `assets/css/site.css` | Fonts, page basics, the menu, and the styles for post text |
 | `assets/js/site.js` | Menu behavior and the contact form hand-off. The site works without it |
 | `build.py` | The page templates and the fixed text of each page (biography, teaching, duo, contact) |
+| `i18n.py` | Turns each English page into the other nine languages |
+| `content/i18n/` | One translation file per language, plus the translators' guide |
 | `public/` | The finished site |
 
 ## Writing a post
@@ -100,6 +102,21 @@ The Understory Duo page has a Commissions section that stays hidden while the li
   {"year": 2027, "composer": "Composer's name", "work": "Title of the piece", "premiere": "Premiere: venue, city"}
 ]
 ```
+
+## Languages
+
+The site is written in English and published in ten languages: English at the root, and Spanish, German, French, Italian, Portuguese, Japanese, Korean, Traditional Chinese and Simplified Chinese under `/es/`, `/de/`, `/fr/`, `/it/`, `/pt/`, `/ja/`, `/ko/`, `/zh-hant/` and `/zh-hans/`. Every page links to itself in each language from the header, the menu and the footer. An "Other languages" link sends the page through Google's automatic translation for anyone else.
+
+How it works:
+
+- `build.py` builds each page in English. `i18n.py` then makes the other nine versions by looking up every piece of text in `content/i18n/<code>.json`, rewriting dates and times in the language's own format, and pointing links at the same language.
+- **Text with no translation stays in English** on the translated pages. `python3 build.py --check` lists what is missing for each language, so run it after changing any wording, adding a performance, or adding a post.
+- To translate new text, add the English string and its translation to each `content/i18n/<code>.json`. `python3 build.py --strings` rewrites `content/i18n/_english.json`, the full list of English text in use. `content/i18n/README.md` is the guide for translators: voice, names, and the agreed musical terms.
+- **Posts** are translated as whole files. Put the translated post at `content/posts/<code>/<same file name>.md` with `title`, `summary` and `standfirst` translated in its header. A post with no translated file is shown in English under a one-line notice in the reader's language.
+- Anything in `[square brackets]` is never translated.
+- `reply_time` in `content/site.json` is shown exactly as typed in every language, so prefer a form that needs no translation, or leave it empty.
+
+The translations were written and then independently reviewed, but not by native speakers. Before relying on a language for something important, ask a native-speaking musician to read it.
 
 ## Publishing
 

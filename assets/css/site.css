@@ -110,6 +110,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .menu-links a { min-height: 48px; font-size: 30px; }
 }
 
+/* Languages: the button in the header, and the lists in the footer and the menu. */
+.lang-btn:hover { color: #f0ead6; text-decoration: underline; text-underline-offset: 3px; }
+.langs a { display: inline-flex; align-items: center; min-height: 44px; color: #e6dfc8; font-size: 15px; line-height: 20px; font-weight: 500; }
+.langs a[aria-current] { color: #b7b09a; text-decoration: none; }
+.menu-langs { display: flex; flex-wrap: wrap; gap: 0 20px; padding-top: 12px; border-top: 1px solid #b7b09a; }
+.menu-langs a { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; line-height: 20px; font-weight: 500; }
+.menu-langs a[aria-current] { color: #5c584b; text-decoration: none; }
+@container (max-width: 560px) { .lang-name { display: none; } }
+
+/* Chinese, Japanese and Korean: taller lines for large type, and no slanted text. */
+:is(:lang(ja), :lang(ko), :lang(zh)) :is(h1, h2, h3):not([translate="no"]) { line-height: 1.25 !important; letter-spacing: 0 !important; }
+:is(:lang(ja), :lang(ko), :lang(zh)) .menu-links a { line-height: 1.3; }
+:lang(ja) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif; font-style: normal; }
+:lang(ko) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, AppleMyungjo, 'Nanum Myeongjo', Batang, 'Noto Serif CJK KR', 'Noto Serif KR', serif; font-style: normal; }
+:lang(zh-Hant) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, 'Songti TC', PMingLiU, 'Noto Serif CJK TC', 'Noto Serif TC', serif; font-style: normal; }
+:lang(zh-Hans) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, 'Songti SC', SimSun, 'Noto Serif CJK SC', 'Noto Serif SC', serif; font-style: normal; }
+:lang(ko) { word-break: keep-all; }
+:lang(ja) { line-break: strict; }
+
 /* Post bodies come from Markdown, so they are styled here rather than inline. */
 .prose { display: flex; flex-direction: column; gap: 28px; }
 .prose > * { margin: 0; }
