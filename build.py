@@ -811,16 +811,25 @@ def build_posts():
 
 
 # ------------------------------------------------------------------ Understory Duo
-def commission(last=False):
+def commission(item, last=False):
     bb = f'; border-bottom: {RULE}' if last else ''
     return f"""<div style="display: flex; flex-wrap: wrap; gap: 8px 32px; padding: 28px 0; border-top: {RULE}{bb}">
-<span style="flex: 0 0 136px; {META}; line-height: 30px">[Year]</span>
+<span style="flex: 0 0 136px; {META}; line-height: 30px">{esc(str(item.get('year', '')))}</span>
 <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 6px">
-<span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">[Composer]</span>
-<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">[Work title]</span>
+<span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">{esc(item.get('composer'))}</span>
+<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">{esc(item.get('work'))}</span>
 </div>
-<span style="flex: 1 1 180px; font-size: 15px; line-height: 30px; color: {MUTED}">[Premiere: venue, city]</span>
+<span style="flex: 1 1 180px; font-size: 15px; line-height: 30px; color: {MUTED}">{esc(item.get('premiere'))}</span>
 </div>"""
+
+
+def commissions_section():
+    """The list of pieces written for the duo. Left off the page until the first one is added."""
+    items = PERF.get('commissions', [])
+    if not items:
+        return ''
+    rows = '\n'.join(commission(i, last=(n == len(items) - 1)) for n, i in enumerate(items))
+    return split(f'<h2 style="{H2}">Commissions</h2>' + chr(10) + '<p style="margin: 0; max-width: 320px">New pieces written for the duo.</p>', rows, sec_id='commissions')
 
 
 def build_duo():
@@ -854,7 +863,7 @@ def build_duo():
 </div>
 </section>
 
-{split(f'<h2 style="{H2}">Commissions</h2>' + chr(10) + '<p style="margin: 0; max-width: 320px">New pieces written for the duo.</p>', commission() + chr(10) + commission(last=True), sec_id='commissions')}
+{commissions_section()}
 
 {cta('Composers and presenters', 'We are looking for new pieces and for places to play them. Tell us what you are working on.', 'Write to us')}"""
     page(URL['duo'], 'Understory Duo · double bass and piano', 'Understory Duo is double bassist Kellum Jones and pianist Hsin Yeh, commissioning new work for double bass and piano from living composers.', band('<span>Understory</span><span>Duo</span>', 'Double bass and piano', mark='tie'), main, current='duo')

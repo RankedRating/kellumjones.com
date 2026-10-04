@@ -91,6 +91,16 @@ Edit `content/performances.json`. Dates are written year-month-day.
 
 `time`, `with`, `admission` and `link` are optional; leave any of them out and the row simply omits it. The home page shows the next two upcoming performances. The "Watch and listen" section and every YouTube link stay off the site until `youtube` is set in `content/site.json` or a video is added here; after that they appear on the next build. The first video is shown large. When a list is empty the page shows bracketed placeholders, so the layout can be judged before the real dates exist. When a performance has happened, move it from `upcoming` to `past`.
 
+## Adding a commission
+
+The Understory Duo page has a Commissions section that stays hidden while the list is empty. To show it, add the first piece to `commissions` in `content/performances.json`:
+
+```json
+"commissions": [
+  {"year": 2027, "composer": "Composer's name", "work": "Title of the piece", "premiere": "Premiere: venue, city"}
+]
+```
+
 ## Publishing
 
 The site is meant for Cloudflare Pages, connected to this repository:
