@@ -588,7 +588,7 @@ def build_home():
 <div id="duo" class="h-drop-lg" style="flex: 7 1 380px; display: flex; flex-direction: column; gap: 24px; align-items: flex-start">
 <img src="{IMG['duo']}" alt="Kellum Jones and Hsin Yeh of Understory Duo" loading="lazy" style="width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 75% 50%">
 <h2 style="{H2}">Understory Duo</h2>
-<p style="margin: 0; max-width: 520px">A double bass and piano duo with pianist Hsin Yeh. We commission new work from living composers, and provide education [finish this line: for whom, and how].</p>
+<p style="margin: 0; max-width: 520px">A double bass and piano duo with pianist Hsin Yeh. We commission new work from living composers, and offer education for our community, showing the beauty of the double bass and the unique sound it makes together with the piano.</p>
 <a href="{URL['duo']}" style="{LINK}">About the duo</a>
 </div>
 </section>
@@ -827,7 +827,7 @@ def build_duo():
     main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap-reverse; align-items: flex-end; gap: 48px clamp(32px, 7.5cqw, 96px)">
 <div style="flex: 5 1 340px; display: flex; flex-direction: column; gap: 24px">
 <p style="{LEAD}">Understory Duo is the double bassist Kellum Jones and the pianist Hsin Yeh.</p>
-<p style="{P}">We commission new work from living composers, and provide education [finish this line: for whom, and how].</p>
+<p style="{P}">We commission new work from living composers, and offer education for our community, showing the beauty of the double bass and the unique sound it makes together with the piano.</p>
 <p style="{P}">[Why the name: one or two sentences on what &quot;understory&quot; means to you both.]</p>
 <a href="{URL['contact']}" style="{LINK}">Write to the duo</a>
 </div>
