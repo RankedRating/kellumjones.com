@@ -28,6 +28,8 @@ Translate the meaning faithfully. Do not add, drop or embellish. Buttons and men
 
 Keep in Latin letters, unchanged: Kellum Jones, Hsin Yeh, Understory Duo, Schwob School of Music, LaGrange Youth Symphony Orchestra, Dr. Luca Lombardi, Ludwig Streicher, Studio Theatre, RiverCenter. Do not guess native-script spellings for Kellum Jones or Hsin Yeh.
 
+In Hsin Yeh's biography, also keep in Latin letters, unchanged: Pan-An Chen, Joanna Ting, Esther Park, Alexei Volodin, Allison Franzetti, InterHarmony International Music Festival, Living Grace Church, Schwob Concerto Competition, and Music Teachers National Association (MTNA). Do not guess native-script spellings for the people. Translate the titles (Professor, Dr.) the way the language does for teachers. Kaohsiung and Taiwan take the language's own form. Her two schools in Taiwan, National Feng-Hsin High School and the University of Taipei, stay in English in every language except Chinese, where they take their own names: 國立鳳新高級中學 and 臺北市立大學 (Simplified: 国立凤新高级中学 and 台北市立大学). The MTNA competition has a state round; hers was the round for the US state of Georgia. A collaborative pianist is one who plays with other musicians (what used to be called an accompanist).
+
 Use the language's own usual form for: place names (Columbus, Georgia is the US state, not the country), the Milan Conservatory, and composers (Reinhold Glière). The soloist Mikyung Sung is written 성미경 in Korean and stays in Latin letters, Mikyung Sung, in every other language. Hsin Yeh and Mikyung Sung are both women.
 
 ## Register

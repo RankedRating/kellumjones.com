@@ -142,7 +142,7 @@ Run `python3 build.py --check`. It lists every bracketed placeholder still on th
 - [ ] Fill in `content/site.json`: email, YouTube, Instagram, photographer
 - [ ] Set `newsletter_action` in `content/site.json` to the form address from the email newsletter service. Until then the signup form only leads to the contact page
 - [ ] Read and correct the biography, short biography and teaching text in `build.py` (they are drafts)
-- [ ] Finish the Understory Duo text: the education sentence, the name, Hsin's biography, commissions
+- [ ] Have Hsin read her biography on the Understory Duo page (`HSIN_BIO` near the top of `build.py`), in English and in Chinese
 - [ ] Add real performances and videos
 - [ ] Write the first posts and give them dates
 

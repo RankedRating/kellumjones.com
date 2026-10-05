@@ -95,6 +95,13 @@ BIO_PARAS = [
 BIO_SHORT = 'Kellum Jones is a double bassist based in Columbus, Georgia. He studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra and performs with the pianist Hsin Yeh as Understory Duo, commissioning new work for double bass and piano from living composers.'
 KIT_URL = '/press/kellum-jones-press-kit.zip'
 
+# Hsin Yeh's biography, shown on the Understory Duo page
+HSIN_BIO = [
+    'Hsin Yeh is a pianist from Kaohsiung, Taiwan. She began her musical studies at the age of four with her mother, and went on to study at the National Feng-Hsin High School with Professor Pan-An Chen and at the University of Taipei with Dr. Joanna Ting. She now studies at the Schwob School of Music with Dr. Esther Park.',
+    'She has studied with Alexei Volodin and Allison Franzetti at the InterHarmony International Music Festival in Italy. She was a finalist in the Schwob Concerto Competition and won third place in the 2023 Georgia state competition of the Music Teachers National Association (MTNA).',
+    'Hsin is a pianist at Living Grace Church and works regularly with fellow students at Schwob as a collaborative pianist. She is working toward a career as a solo, chamber and collaborative pianist.',
+]
+
 # ------------------------------------------------------------------ site settings with placeholders
 EMAIL = SITE.get('email', '').strip()
 EMAIL_LABEL = esc(EMAIL) if EMAIL else '[your email address]'
@@ -884,7 +891,7 @@ def build_duo():
 <img class="feather" src="{IMG['hsin']}" alt="Hsin Yeh in a black dress, looking to one side" loading="lazy" style="display: block; width: 100%; max-width: 520px; margin-bottom: 12px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 92% 50%">
 <span style="{META}">Piano</span>
 <h3 style="{H3}">Hsin Yeh</h3>
-<p style="margin: 0; max-width: 520px">[Hsin&#39;s biography: two or three sentences, in the third person.]</p>
+{chr(10).join(f'<p style="margin: 0; max-width: 520px">{t}</p>' for t in HSIN_BIO)}
 </div>
 </div>
 </section>
