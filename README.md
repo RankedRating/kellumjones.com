@@ -93,7 +93,7 @@ Edit `content/performances.json`. Dates are written year-month-day.
 }
 ```
 
-`time`, `with`, `admission` and `link` are optional; leave any of them out and the row simply omits it. The home page shows the next two upcoming performances. The "Watch and listen" section and every YouTube link stay off the site until `youtube` is set in `content/site.json` or a video is added here; after that they appear on the next build. The first video is shown large. When a list is empty the page shows bracketed placeholders, so the layout can be judged before the real dates exist. When a performance has happened, move it from `upcoming` to `past`.
+`time`, `with`, `admission` and `link` are optional; leave any of them out and the row simply omits it. The home page shows the next two upcoming performances. The "Watch and listen" section and every YouTube link stay off the site until `youtube` is set in `content/site.json` or a video is added here; after that they appear on the next build. The first video is shown large. The "Past performances" section stays off the page while `past` is empty and appears with the first entry. When a performance has happened, move it from `upcoming` to `past`.
 
 ## Adding a commission
 
@@ -118,7 +118,7 @@ How it works:
 - To translate new text, add the English string and its translation to each `content/i18n/<code>.json`. `python3 build.py --strings` rewrites `content/i18n/_english.json`, the full list of English text in use. `content/i18n/README.md` is the guide for translators: voice, names, and the agreed musical terms.
 - **Posts** are translated as whole files. Put the translated post at `content/posts/<code>/<same file name>.md` with `title`, `summary` and `standfirst` translated in its header. A post with no translated file is shown in English under a one-line notice in the reader's language.
 - Anything in `[square brackets]` is never translated.
-- `reply_time` in `content/site.json` completes the sentence "I reply within ... ." on the Contact page. "a few days" is already translated. For any other wording, add the whole sentence ("I reply within two days.") to each translation file; `--check` lists it until that is done.
+- `reply_time` in `content/site.json` completes the sentence "I reply within ... ." on the Contact page. It is set to "two business days", and that sentence is translated. For any other wording, add the whole sentence ("I reply within a week.") to each translation file; `--check` lists it until that is done.
 - Each language also gets its own not-found page (`/es/404.html`), its own feed of posts (`/es/writing/feed.xml`) and its own biography sheet in the press kit. All three are made from the same translation files, so there is nothing extra to keep up.
 - The sentence on the offer card and each language's name live in `LANGS` at the top of `i18n.py`.
 
@@ -141,7 +141,7 @@ Run `python3 build.py --check`. It lists every bracketed placeholder still on th
 
 - [ ] Fill in `content/site.json`: email, YouTube, Instagram, photographer
 - [ ] Set `newsletter_action` in `content/site.json` to the form address from the email newsletter service. Until then the signup form only leads to the contact page
-- [ ] Read and correct the biography and short biography in `build.py` (they are drafts), and add the performance highlights
+- [ ] Read and correct the biography and short biography in `build.py` (they are drafts). When there are performance highlights to name, add a paragraph to `BIO_PARAS`
 - [ ] Have Hsin read her biography on the Understory Duo page (`HSIN_BIO` near the top of `build.py`), in English and in Chinese
 - [ ] Add real performances and videos
 - [ ] Write the first posts and give them dates

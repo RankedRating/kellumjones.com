@@ -69,7 +69,6 @@ EXTRA = [
     'Other languages (automatic translation)',
     '1 post',
     'This post has not been translated yet. It is shown in English.',
-    'I reply within a few days.',          # the Contact page sentence once reply_time is set to "a few days"
 ]
 
 # ------------------------------------------------------------------ dates and times

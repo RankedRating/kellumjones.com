@@ -88,7 +88,6 @@ def slugify(text):
 BIO_LEAD = 'Kellum Jones is a double bassist based in Columbus, Georgia, building a career as a soloist and teacher.'
 BIO_PARAS = [
     'He studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, and has taken summer lessons with the soloist Mikyung Sung. He plays the German bow in the Viennese tradition of Ludwig Streicher.',
-    '[Performance highlights: two or three sentences on recitals, concerto appearances, competitions and festivals.]',
     'Kellum is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he teaches beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob.',
     'With the pianist Hsin Yeh he performs as Understory Duo, which commissions new work for double bass and piano from living composers. He writes about practice and the German bow in the notebook on this site.',
 ]
@@ -699,7 +698,7 @@ def build_perf():
 
 {watch}
 
-{split(f'<h2 style="{H2}">Past performances</h2>', past_block(), sec_id='past')}
+{split(f'<h2 style="{H2}">Past performances</h2>', past_block(), sec_id='past') if PERF.get('past') else ''}
 
 {cta('Booking', 'For recitals, concertos, chamber music and school visits, write with the date and the kind of program you have in mind.', 'Get in touch')}"""
     page(URL['perf'], 'Performances · Kellum Jones', 'Upcoming and past performances by double bassist Kellum Jones' + (', with video.' if HAS_VIDEO else '.'), band('<span>Performances</span>', mark='fermata'), main, current='perf')

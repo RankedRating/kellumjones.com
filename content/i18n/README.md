@@ -22,7 +22,7 @@ Translate the meaning faithfully. Do not add, drop or embellish. Buttons and men
 - Keep the markers `{n}`, `{name}` and `{time}` in the translation; the site fills them in.
 - Anything in `[square brackets]` is a note to Kellum, not site text. Leave it exactly as it is, in English, even inside a translated sentence.
 - A value may equal the English when that is correct (a name, for example).
-- "I reply within {time}." is only a fallback. The length of time is ordinary words, so the sentence Kellum actually uses ("I reply within a few days.") has its own entry, translated whole.
+- "I reply within {time}." is only a fallback. The length of time is ordinary words, so the sentence Kellum actually uses ("I reply within two business days.") has its own entry, translated whole.
 
 ## Names
 
