@@ -150,7 +150,7 @@ The contact form opens the visitor's mail app with the message filled in. To hav
 
 ## Photos
 
-Photos are lightly retouched (skin only) and saved at 86 dpi or less. Each photo exists twice: a page copy in `assets/images/` and a larger copy in `assets/images/press/`. To replace one, save the new file under the same name in both places and rebuild.
+Photos are lightly retouched (skin only) and saved at 86 dpi or less. Each photo exists twice: a page copy in `assets/images/` and a larger copy in `assets/images/press/`. To replace one, save the new file under the same name in both places and rebuild. Hsin's portrait on the Understory Duo page, `assets/images/hsin-yeh.jpg`, has a page copy only: the press folder is Kellum's press kit.
 
 Photos are blended into the page in three ways, all in `assets/css/site.css`:
 

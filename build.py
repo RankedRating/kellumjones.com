@@ -67,6 +67,7 @@ IMG = {
     'up': '/images/kellum-jones-standing-looking-up.jpg',
     'duo': '/images/understory-duo.jpg',
     'think': '/images/kellum-jones-thinking.jpg',
+    'hsin': '/images/hsin-yeh.jpg',
 }
 TOPICS = [
     ('The German bow', 'The hold, the sound, and why I chose it.'),
@@ -872,13 +873,15 @@ def build_duo():
 <section id="players" style="{WRAP}; {SECPAD}; display: flex; flex-direction: column; gap: 48px">
 <h2 style="{H2}">The players</h2>
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px clamp(32px, 10cqw, 128px)">
-<div style="flex: 5 1 300px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding-top: 24px; border-top: {RULE}">
+<div style="flex: 5 1 300px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<img class="feather" src="{IMG['up']}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 440px; margin-bottom: 12px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 8%">
 <span style="{META}">Double bass</span>
 <h3 style="{H3}">Kellum Jones</h3>
 <p style="margin: 0; max-width: 520px">Kellum studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra.</p>
 <a href="{URL['bio']}" style="{LINK}">Full biography</a>
 </div>
-<div class="h-drop" style="flex: 6 1 340px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding-top: 24px; border-top: {RULE}">
+<div class="h-drop" style="flex: 6 1 340px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
+<img class="feather" src="{IMG['hsin']}" alt="Hsin Yeh in a black dress, looking to one side" loading="lazy" style="display: block; width: 100%; max-width: 520px; margin-bottom: 12px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 92% 50%">
 <span style="{META}">Piano</span>
 <h3 style="{H3}">Hsin Yeh</h3>
 <p style="margin: 0; max-width: 520px">[Hsin&#39;s biography: two or three sentences, in the third person.]</p>
