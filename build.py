@@ -613,7 +613,7 @@ def build_home():
 <div style="flex: 5 1 300px; display: flex; flex-direction: column; gap: 24px; align-items: flex-start">
 <img src="{IMG['think']}" alt="Kellum Jones resting his chin on his hand" loading="lazy" style="width: 100%; max-width: 520px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 35% 50%">
 <h2 style="{H2}">Teaching</h2>
-<p style="margin: 0; max-width: 520px">Lessons start with how you hold the bow and how you listen. I teach beginners and players preparing for auditions, and I am on the double bass faculty of the LaGrange Youth Symphony Orchestra.</p>
+<p style="margin: 0; max-width: 520px">Lessons start with how you hold the bow and how you listen. I teach students at every level, and I am on the double bass faculty of the LaGrange Youth Symphony Orchestra.</p>
 <a href="{URL['teach']}" style="{LINK}">Ask about lessons</a>
 </div>
 <div id="duo" class="h-drop-lg" style="flex: 7 1 380px; display: flex; flex-direction: column; gap: 24px; align-items: flex-start">
@@ -729,8 +729,8 @@ def build_teach():
     main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap-reverse; align-items: flex-end; gap: 48px clamp(32px, 10cqw, 128px)">
 <div style="flex: 7 1 420px; display: flex; flex-direction: column; gap: 24px">
 <p style="{LEAD}">Lessons start with how you hold the bow and how you listen.</p>
-<p style="{P}">I teach double bass to beginners, to school and youth orchestra players, and to students preparing for auditions. I am on the double bass faculty of the LaGrange Youth Symphony Orchestra, and I lead weekly technique sessions for students at the Schwob School of Music.</p>
-<p style="{P}">[Your approach in your own words: two or three sentences on what a student can expect from you and what you expect from them.]</p>
+<p style="{P}">I teach double bass at every level, and I will work with a student from any starting point. I am on the double bass faculty of the LaGrange Youth Symphony Orchestra, and I lead weekly technique sessions for students at the Schwob School of Music.</p>
+<p style="{P}">A student who studies with me can expect an unshakable foundation and the facility to achieve their goals. Students develop musicality and a strong understanding of the fundamentals of music.</p>
 <a href="{URL['contact']}" style="{LINK}">Ask about lessons</a>
 </div>
 <div class="p-rise" style="position: relative; flex: 4 1 300px; max-width: 480px">
@@ -739,16 +739,16 @@ def build_teach():
 </div>
 </section>
 
-{split(f'<h2 style="{H2}">What lessons cover</h2>', numbered(1, 'Sound and the bow', 'The bow hold, arm weight, contact point and string crossings. German bow is my own instrument. [Say here whether you also take French bow students.]') + chr(10) + numbered(2, 'The left hand', 'Shifting, intonation and a hand frame that stays relaxed across the whole fingerboard.') + chr(10) + numbered(3, 'How to practice', 'How to plan an hour, what to do when a passage will not improve, and how to tell whether the work is paying off.', last=True), sec_id='cover')}
+{split(f'<h2 style="{H2}">What lessons cover</h2>', numbered(1, 'Sound and the bow', 'The bow hold, arm weight, contact point and string crossings. German bow is my own instrument.') + chr(10) + numbered(2, 'The left hand', 'Shifting, intonation and a hand frame that stays relaxed across the whole fingerboard.') + chr(10) + numbered(3, 'How to practice', 'How to plan an hour, what to do when a passage will not improve, and how to tell whether the work is paying off.', last=True), sec_id='cover')}
 
 <section aria-label="Practical details" style="padding-top: clamp(96px, 12.5cqw, 160px)">
 <div class="p-bleed-r" style="box-sizing: border-box; background: {RAISED}; {PANEL_PAD_R}; display: flex; flex-direction: column; gap: 24px">
 <h2 style="{H2S}">Practical details</h2>
 <dl style="margin: 0; max-width: 760px; display: flex; flex-direction: column">
-{detail('Where', '[In person in Columbus, Georgia, and online]')}
-{detail('Who', '[Ages and levels you take]')}
-{detail('Length', '[30, 45 or 60 minutes]')}
-{detail('Rates', '[Your rates, or &quot;on request&quot;]', last=True)}
+{detail('Where', 'In person in Columbus, Georgia, and online.')}
+{detail('Who', 'All levels, from any starting point.')}
+{detail('Length', 'Tailored to what each student needs.')}
+{detail('Rates', 'On request.', last=True)}
 </dl>
 </div>
 </section>
