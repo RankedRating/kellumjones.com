@@ -3,6 +3,7 @@
  "Skip to content": "/",
  "Menu": "/",
  "Double bass": "/",
+ "Language": "/",
  "From the notebook": "/",
  "The German bow": "/",
  "Why I play the German bow, and how I made the decision": "/",
@@ -37,7 +38,6 @@
  "Home": "/",
  "Biography and photos": "/",
  "Kellum Jones leaning on a white plinth against a dark backdrop": "/",
- "Language": "/",
  "Open menu": "/",
  "Kellum Jones resting his chin on his hand": "/",
  "Kellum Jones and Hsin Yeh of Understory Duo": "/",
@@ -134,6 +134,10 @@
  "Send message": "/contact/",
  "I reply within {time}.": "/contact/",
  "Write to Kellum Jones about booking a performance, double bass lessons, or Understory Duo.": "/contact/",
+ "Page not found": "/404.html",
+ "That page is not here. It may have moved, or the link may be wrong.": "/404.html",
+ "Go to the home page": "/404.html",
+ "Page not found.": "/404.html",
  "1 post": "(used on several pages)",
  "This post has not been translated yet. It is shown in English.": "(used on several pages)"
 }

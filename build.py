@@ -153,8 +153,19 @@ PLAY_ICON = '<svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" 
 # ------------------------------------------------------------------ shared pieces
 GLOBE_ICON = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"></circle><ellipse cx="10" cy="10" rx="3.6" ry="8.5"></ellipse><line x1="1.5" y1="10" x2="18.5" y2="10"></line></svg>'
 # %%...%% markers are filled in per language when the pages are written out (see emit_pages)
-LANG_BUTTON = f'<a href="#languages" class="lang-btn" aria-label="Language" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; color: {EGG}; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500">{GLOBE_ICON}<span class="lang-name" translate="no">%%LANG_NAME%%</span></a>'
+LANG_BUTTON = f'<a href="#lang" class="lang-btn" data-lang-open aria-controls="lang" aria-label="Language" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; color: {EGG}; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500">{GLOBE_ICON}<span class="lang-name" translate="no">%%LANG_NAME%%</span></a>'
 MENU_BUTTON = f'<a href="#menu" data-menu-open aria-label="Open menu" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 4px; color: {EGG}; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><span>Menu</span>{MENU_ICON}</a>'
+
+# The list that opens under the language button. It sits outside the header so the header cannot clip it.
+LANG_PANEL = f"""<nav id="lang" class="lang-panel" aria-label="Language" data-current="%%LANG_CODE%%">
+<div class="lang-panel-top">
+<span>Language</span>
+<a href="#top" data-lang-close aria-label="Close">{CLOSE_ICON.replace('width="24" height="24"', 'width="14" height="14"')}</a>
+</div>
+<div class="lang-panel-list">
+%%LANG_PANEL%%
+</div>
+</nav>"""
 
 TOP_RIGHT = f'<div style="display: flex; align-items: center; gap: clamp(8px, 2cqw, 24px)">{LANG_BUTTON}{MENU_BUTTON}</div>'
 
@@ -528,13 +539,15 @@ def page(path, title, description, header, main, current=None, og_type='website'
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/cardo-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
-<link rel="alternate" type="application/rss+xml" title="Kellum Jones: writing" href="/writing/feed.xml">{head_extra}
+<link rel="alternate" type="application/rss+xml" title="%%FEED_TITLE%%" href="/writing/feed.xml">{head_extra}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="page">
 
 {header}
+
+{LANG_PANEL}
 
 <main id="main">
 
@@ -951,7 +964,8 @@ def build_404():
 <p style="{LEAD}">That page is not here. It may have moved, or the link may be wrong.</p>
 <a href="{URL['home']}" class="btn" style="{BTN}">Go to the home page</a>
 </section>"""
-    page('/404.html', 'Page not found · Kellum Jones', 'Page not found.', band('<span>Page not found</span>', mark='fermata'), main)
+    page('/404.html', 'Page not found · Kellum Jones', 'Page not found.', band('<span>Page not found</span>', mark='fermata'), main,
+         head_extra='\n<meta name="robots" content="noindex">')
 
 
 # ------------------------------------------------------------------ languages
@@ -959,16 +973,32 @@ def lang_prefix(code):
     return '' if code == 'en' else f'/{code}'
 
 
-def lang_links(path, current):
-    """Links to this same page in every language, plus automatic translation for the rest."""
+def lang_links(path, current, offers=False):
+    """Links to this same page in every language, plus automatic translation for the rest.
+    With offers, each link also carries its "Read this page in ..." sentence for site.js to show."""
     target = '/' if path == '/404.html' else path
     out = []
     for l in i18n.LANGS:
         cur = ' aria-current="true"' if l['code'] == current else ''
-        out.append(f'<a href="{lang_prefix(l["code"])}{target}" lang="{l["tag"]}" hreflang="{l["tag"]}" translate="no"{cur}>{l["name"]}</a>')
+        offer = f' data-offer="{esc(l["offer"])}"' if offers else ''
+        out.append(f'<a href="{lang_prefix(l["code"])}{target}" lang="{l["tag"]}" hreflang="{l["reach"]}" data-lang="{l["code"]}"{offer} translate="no"{cur}>{l["name"]}</a>')
     auto = f'https://translate.google.com/translate?sl=en&amp;u={BASE}{target}'
     out.append(f'<a href="{auto}" data-auto-translate rel="nofollow noopener">Other languages (automatic translation)</a>')
     return '\n'.join(out)
+
+
+def post_has_text(p):
+    """True once a post holds real writing, not only its bracketed notes."""
+    return bool(re.search(r'\w', re.sub(r'\[[^\[\]]*\]', '', re.sub(r'<[^>]+>', ' ', p['html']))))
+
+
+def say(code, text):
+    """`text` in one language, for the files that are not pages (feeds, the press kit)."""
+    if code == 'en':
+        return text
+    tr = TRANSLATORS[code]
+    tr.page = '(feed and press kit)'
+    return tr.text(text)
 
 
 def post_translation(code, filename):
@@ -1009,14 +1039,18 @@ def emit_pages():
                     for field in ('title', 'summary', 'standfirst'):
                         if p[field] and t[field]:
                             tr.catalog[p[field]] = t[field]
+        feed_title = 'Kellum Jones: writing' if code == 'en' else f'Kellum Jones: {say(code, "Writing")}'
+        ld_description = json.dumps(say(code, BIO_SHORT), ensure_ascii=False)[1:-1].replace('</', '<\\/')
         for path, doc in PAGES_WRITTEN:
-            if path == '/404.html' and code != 'en':
-                continue
-            target = '/' if path == '/404.html' else path
-            hreflang = '\n'.join(f'<link rel="alternate" hreflang="{x["tag"]}" href="{BASE}{lang_prefix(x["code"])}{target}">' for x in i18n.LANGS)
-            hreflang += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}{target}">'
+            if path == '/404.html':                          # the not-found page is not one of the site's pages
+                hreflang = ''
+            else:
+                hreflang = '\n'.join(f'<link rel="alternate" hreflang="{x["reach"]}" href="{BASE}{lang_prefix(x["code"])}{path}">' for x in i18n.LANGS)
+                hreflang += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}{path}">'
             out = (doc.replace('%%HTML_LANG%%', l['tag']).replace('%%OG_LOCALE%%', l['og']).replace('%%LANG_NAME%%', l['name'])
-                   .replace('%%PAGE_URL%%', f'{BASE}{lang_prefix(code)}{path}').replace('%%HREFLANG%%', hreflang)
+                   .replace('%%LANG_CODE%%', code).replace('%%FEED_TITLE%%', esc(feed_title)).replace('%%LD_DESCRIPTION%%', ld_description)
+                   .replace('%%PAGE_URL%%', f'{BASE}{lang_prefix(code)}{path}').replace('%%HREFLANG%%\n' if not hreflang else '%%HREFLANG%%', hreflang)
+                   .replace('%%LANG_PANEL%%', lang_links(path, code, offers=True))
                    .replace('%%LANG_LINKS%%', lang_links(path, code)))
             if code != 'en':
                 out = i18n.translate_page(swap_post_body(out, tr), tr, path)
@@ -1034,6 +1068,9 @@ def report_translations():
             print(f'  {where}  {text[:90]}')
         if len(missing) > 12:
             print(f'  ... and {len(missing) - 12} more')
+        english = [p['file'] for p in POSTS if post_has_text(p) and not post_translation(l['code'], p['file'])]
+        if english:
+            print(f'  {len(english)} post(s) shown in English, with no file in content/posts/{l["code"]}/: ' + ', '.join(english))
 
 
 # ------------------------------------------------------------------ files beside the pages
@@ -1061,17 +1098,39 @@ def build_extras():
     write('robots.txt', f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n')
     urls = '\n'.join(f'<url><loc>{BASE}{lang_prefix(l["code"])}{path}</loc></url>' for l in i18n.LANGS for path, _ in PAGES_WRITTEN if path != '/404.html')
     write('sitemap.xml', f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n')
-    items = '\n'.join(
-        f'<item><title>{esc(p["title"])}</title><link>{BASE}{p["url"]}</link><guid>{BASE}{p["url"]}</guid>'
-        + (f'<pubDate>{p["date"].strftime("%a, %d %b %Y")} 12:00:00 GMT</pubDate>' if p['date'] else '')
-        + f'<description>{esc(p["summary"])}</description></item>'
-        for p in POSTS)
-    write('writing/feed.xml', f'<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Kellum Jones: writing</title><link>{BASE}/writing/</link><description>Notes from the practice room.</description>\n{items}\n</channel></rss>\n')
+    for l in i18n.LANGS:                                     # one feed of posts per language
+        code, pre = l['code'], lang_prefix(l['code'])
+        items = '\n'.join(
+            f'<item><title>{esc(say(code, p["title"]))}</title><link>{BASE}{pre}{p["url"]}</link><guid>{BASE}{pre}{p["url"]}</guid>'
+            + (f'<pubDate>{p["date"].strftime("%a, %d %b %Y")} 12:00:00 GMT</pubDate>' if p['date'] else '')
+            + f'<description>{esc(say(code, p["summary"]))}</description></item>'
+            for p in POSTS)
+        title = 'Kellum Jones: writing' if code == 'en' else f'Kellum Jones: {say(code, "Writing")}'
+        write(f'{pre}/writing/feed.xml'.lstrip('/'), f'<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>{esc(title)}</title><link>{BASE}{pre}/writing/</link><description>{esc(say(code, "Notes from the practice room"))}</description><language>{l["tag"]}</language>\n{items}\n</channel></rss>\n')
     write('_headers', '/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/images/*\n  Cache-Control: public, max-age=604800\n/css/*\n  Cache-Control: public, max-age=3600\n/js/*\n  Cache-Control: public, max-age=3600\n')
 
 
+# File names for the translated biographies in the press kit.
+KIT_NAMES = {'es': 'spanish', 'de': 'german', 'fr': 'french', 'it': 'italian', 'pt': 'portuguese', 'ja': 'japanese',
+             'ko': 'korean', 'zh-hant': 'chinese-traditional', 'zh-hans': 'chinese-simplified'}
+
+
+def kit_translation(code):
+    """The press kit's biography sheet in one language, made from the same translations as the Biography page."""
+    finished = [t for t in BIO_PARAS if not t.startswith('[')]
+    credit = SITE.get('photographer', '').strip()
+    t = lambda text: say(code, text)
+    return '\n'.join([
+        t('Kellum Jones, double bass'), f'{BASE}/{code}/', '',
+        t('Short biography'), t('For concert programs'), '', t(BIO_SHORT), '', '',
+        t('Biography'), '', t(BIO_LEAD), '', '\n\n'.join(t(x) for x in finished), '', '',
+        t('Photos'), '', t(f'Free to use for press and concert programs. Please credit {credit}.') if credit else '', '',
+        t('Contact'), '', SITE.get('email', '').strip() or f'{BASE}/{code}/contact/', '',
+    ])
+
+
 def build_press_kit():
-    """Write press/kellum-jones-press-kit.zip: both biographies as text, plus the press photos."""
+    """Write press/kellum-jones-press-kit.zip: the biographies as text in every language, plus the press photos."""
     import zipfile
     finished = [t for t in BIO_PARAS if not t.startswith('[')]     # leave unfinished paragraphs out
     credit = SITE.get('photographer', '').strip()
@@ -1088,6 +1147,10 @@ def build_press_kit():
     fixed = (2026, 1, 1, 0, 0, 0)       # a fixed date, so the file only changes when its contents do
     with zipfile.ZipFile(target, 'w') as z:
         z.writestr(zipfile.ZipInfo('kellum-jones-press-kit/biography.txt', fixed), text, zipfile.ZIP_DEFLATED)
+        for code, name in KIT_NAMES.items():
+            # the byte-order mark makes older Windows programs read the accents and CJK characters correctly
+            z.writestr(zipfile.ZipInfo(f'kellum-jones-press-kit/biography-translations/biography-{name}.txt', fixed),
+                       '\ufeff' + kit_translation(code), zipfile.ZIP_DEFLATED)
         for name in sorted(os.listdir(folder)):
             with open(os.path.join(folder, name), 'rb') as f:
                 z.writestr(zipfile.ZipInfo(f'kellum-jones-press-kit/photos/{name}', fixed), f.read(), zipfile.ZIP_STORED)
@@ -1097,7 +1160,7 @@ def structured_data():
     """A short description of Kellum for search engines, placed on the home page."""
     same = [u for u in (SITE.get('youtube', '').strip(), SITE.get('instagram', '').strip()) if u]
     data = {'@context': 'https://schema.org', '@type': 'Person', 'name': 'Kellum Jones', 'jobTitle': 'Double bassist',
-            'url': BASE + '/', 'image': BASE + IMG['hero'], 'description': BIO_SHORT,
+            'url': BASE + '/', 'image': BASE + IMG['hero'], 'description': '%%LD_DESCRIPTION%%',
             'address': {'@type': 'PostalAddress', 'addressLocality': 'Columbus', 'addressRegion': 'GA', 'addressCountry': 'US'},
             'memberOf': {'@type': 'MusicGroup', 'name': 'Understory Duo', 'url': BASE + URL['duo']}}
     if same:
@@ -1108,6 +1171,22 @@ def structured_data():
 def copy_assets():
     for name in ('css', 'js', 'fonts', 'images'):
         shutil.copytree(os.path.join(ROOT, 'assets', name), os.path.join(OUT, name), dirs_exist_ok=True)
+
+
+def broken_links():
+    """Every link, image and file address on the built site that leads nowhere. Checked on every build."""
+    bad = []
+    for folder, _, files in os.walk(OUT):
+        for name in files:
+            if not name.endswith('.html'):
+                continue
+            where = '/' + os.path.relpath(os.path.join(folder, name), OUT).replace(os.sep, '/')
+            doc = open(os.path.join(folder, name), encoding='utf-8').read()
+            for target in set(re.findall(r'\b(?:href|src|action)="(/[^"#?]*)', doc)):
+                path = os.path.join(OUT, target.lstrip('/'))
+                if not (os.path.isfile(path) or os.path.isfile(os.path.join(path, 'index.html'))):
+                    bad.append((where, target))
+    return sorted(bad)
 
 
 def report_placeholders():
@@ -1150,6 +1229,13 @@ if __name__ == '__main__':
     build_extras()
     build_press_kit()
     print(f'Built {written} pages into public/ ({len(PAGES_WRITTEN)} pages in {len(i18n.LANGS)} languages)')
+    bad = broken_links()
+    if bad:
+        print(f'\nWARNING: {len(bad)} links on the built site lead nowhere:')
+        for where, target in bad[:20]:
+            print(f'  {where}  ->  {target}')
+        if len(bad) > 20:
+            print(f'  ... and {len(bad) - 20} more')
     if '--strings' in sys.argv:              # the list of English text to translate, for making a translation file
         strings = i18n.collect_strings([(p, d.replace('%%LANG_LINKS%%', lang_links(p, 'en'))) for p, d in PAGES_WRITTEN])
         os.makedirs(os.path.join(ROOT, 'content', 'i18n'), exist_ok=True)

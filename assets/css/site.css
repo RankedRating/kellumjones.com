@@ -29,7 +29,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .skip:focus { top: 16px; color: #f0ead6; }
 
 /* The page is a size container so sections respond to its width. */
-.page { container-type: inline-size; min-height: 100vh; display: flex; flex-direction: column; }
+.page { position: relative; container-type: inline-size; min-height: 100vh; display: flex; flex-direction: column; }
 
 /* Home header: the photo sits behind the name, the bow stands beside it. */
 .d-hero { min-height: 760px; }
@@ -110,8 +110,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .menu-links a { min-height: 48px; font-size: 30px; }
 }
 
-/* Languages: the button in the header, and the lists in the footer and the menu. */
+/* Languages: the button in the header, the list that opens under it, and the lists in the footer and the menu. */
 .lang-btn:hover { color: #f0ead6; text-decoration: underline; text-underline-offset: 3px; }
+.lang-panel { display: none; position: absolute; z-index: 50; top: 72px; right: max(clamp(16px, 2.5cqw, 32px), calc(50cqw - 608px));
+  box-sizing: border-box; width: min(348px, calc(100cqw - 32px)); padding: 12px 24px 16px;
+  background: #f0ead6; color: #000807; border: 1px solid #b7b09a; border-radius: 3px; box-shadow: 0 16px 40px rgba(0, 8, 7, 0.32); }
+.lang-panel:target, .lang-panel.is-open { display: block; }
+.lang-panel-top { display: flex; justify-content: space-between; align-items: center; min-height: 44px; font-size: 15px; line-height: 20px; font-weight: 500; color: #5c584b; }
+.lang-panel-top a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-right: -15px; color: #000807; }
+.lang-panel-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; border-top: 1px solid #b7b09a; padding-top: 8px; }
+.lang-panel-list a { position: relative; display: flex; align-items: center; min-height: 44px; color: #000807; text-decoration: none; font-size: 17px; line-height: 22px; font-weight: 500; }
+.lang-panel-list a:hover { text-decoration: underline; }
+.lang-panel-list a[aria-current] { color: #7a2531; }
+.lang-panel-list a[aria-current]::before { content: ''; position: absolute; left: -14px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: #7a2531; }
+.lang-panel-list a[data-auto-translate] { grid-column: 1 / -1; margin-top: 8px; padding-top: 8px; border-top: 1px solid #b7b09a; color: #7a2531; font-size: 15px; line-height: 20px; }
+
+/* A one-time offer of the visitor's own language, added by site.js. It never redirects. */
+.lang-offer { position: fixed; z-index: 60; left: 16px; bottom: 16px; max-width: calc(100% - 32px); box-sizing: border-box; display: flex; align-items: center;
+  padding-left: 20px; background: #6d1f2b; color: #f0ead6; border-radius: 3px; box-shadow: 0 12px 32px rgba(0, 8, 7, 0.36); font-size: 16px; line-height: 22px; font-weight: 500; }
+.lang-offer a { display: inline-flex; align-items: center; min-height: 52px; color: #f0ead6; text-underline-offset: 4px; }
+.lang-offer a:hover { color: #f0ead6; }
+.lang-offer button { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 52px; margin-left: 4px; padding: 0; border: 0; background: none; color: #e6dfc8; cursor: pointer; }
+.lang-offer button:hover { color: #f0ead6; }
+.lang-offer :focus-visible { outline-color: #f0ead6; }
+@media (prefers-reduced-motion: no-preference) {
+  .lang-offer { animation: offer-in 0.4s ease-out 0.6s backwards; }
+}
+@keyframes offer-in { from { opacity: 0; transform: translateY(8px); } }
 .langs a { display: inline-flex; align-items: center; min-height: 44px; color: #e6dfc8; font-size: 15px; line-height: 20px; font-weight: 500; }
 .langs a[aria-current] { color: #b7b09a; text-decoration: none; }
 .menu-langs { display: flex; flex-wrap: wrap; gap: 0 20px; padding-top: 12px; border-top: 1px solid #b7b09a; }
@@ -119,8 +144,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .menu-langs a[aria-current] { color: #5c584b; text-decoration: none; }
 @container (max-width: 560px) { .lang-name { display: none; } }
 
-/* Chinese, Japanese and Korean: taller lines for large type, and no slanted text. */
-:is(:lang(ja), :lang(ko), :lang(zh)) :is(h1, h2, h3):not([translate="no"]) { line-height: 1.25 !important; letter-spacing: 0 !important; }
+/* Chinese, Japanese and Korean: taller lines for large type, and no slanted text.
+   Headings still in Latin letters (a name, the duo) are marked data-latin by i18n.py and keep the spacing drawn for Cardo. */
+:is(:lang(ja), :lang(ko), :lang(zh)) :is(h1, h2, h3):not([translate="no"], [data-latin]) { line-height: 1.25 !important; letter-spacing: 0 !important; text-wrap: balance; }
+:lang(ja) :is(h1, h2, h3) { word-break: auto-phrase; }
 :is(:lang(ja), :lang(ko), :lang(zh)) .menu-links a { line-height: 1.3; }
 :lang(ja) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif CJK JP', 'Noto Serif JP', serif; font-style: normal; }
 :lang(ko) :is(.menu-links a, .prose h2, .prose h3, .prose blockquote) { font-family: Cardo, AppleMyungjo, 'Nanum Myeongjo', Batang, 'Noto Serif CJK KR', 'Noto Serif KR', serif; font-style: normal; }
@@ -145,5 +172,5 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .prose code { font-size: 0.9em; }
 
 @media print {
-  .menu, .skip { display: none !important; }
+  .menu, .skip, .lang-panel, .lang-offer { display: none !important; }
 }

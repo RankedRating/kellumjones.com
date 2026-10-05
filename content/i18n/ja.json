@@ -135,5 +135,10 @@
  "I reply within {time}.": "{time}以内に返信します。",
  "Write to Kellum Jones about booking a performance, double bass lessons, or Understory Duo.": "公演の出演依頼、コントラバスのレッスン、Understory Duoについては、Kellum Jonesまでご連絡ください。",
  "1 post": "1件の記事",
- "This post has not been translated yet. It is shown in English.": "この記事はまだ翻訳されていません。英語で表示しています。"
+ "This post has not been translated yet. It is shown in English.": "この記事はまだ翻訳されていません。英語で表示しています。",
+ "Page not found": "ページが見つかりません",
+ "That page is not here. It may have moved, or the link may be wrong.": "お探しのページはここにありません。移動したか、リンクが間違っている可能性があります。",
+ "Go to the home page": "ホームへ戻る",
+ "Page not found.": "ページが見つかりません。",
+ "I reply within a few days.": "数日以内に返信します。"
 }

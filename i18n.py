@@ -18,20 +18,25 @@ import re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# code: the folder in the address (kellumjones.com/<code>/) and the name of the translation file
-# tag:  the language tag written into the page, which browsers use to pick fonts and hyphenation
+# code:  the folder in the address (kellumjones.com/<code>/) and the name of the translation file
+# tag:   the language tag written into the page, which browsers use to pick fonts and hyphenation
+# offer: "Read this page in <language>", in that language. Shown once to a visitor whose browser is set to it.
+# reach: who search engines should send to this version, when that is wider than the tag
+#        (the Portuguese is Brazilian, and is still the right version for every Portuguese reader)
 LANGS = [
-    {'code': 'en', 'tag': 'en', 'name': 'English', 'og': 'en_US'},
-    {'code': 'es', 'tag': 'es', 'name': 'Español', 'og': 'es_ES'},
-    {'code': 'de', 'tag': 'de', 'name': 'Deutsch', 'og': 'de_DE'},
-    {'code': 'fr', 'tag': 'fr', 'name': 'Français', 'og': 'fr_FR'},
-    {'code': 'it', 'tag': 'it', 'name': 'Italiano', 'og': 'it_IT'},
-    {'code': 'pt', 'tag': 'pt-BR', 'name': 'Português', 'og': 'pt_BR'},
-    {'code': 'ja', 'tag': 'ja', 'name': '日本語', 'og': 'ja_JP'},
-    {'code': 'ko', 'tag': 'ko', 'name': '한국어', 'og': 'ko_KR'},
-    {'code': 'zh-hant', 'tag': 'zh-Hant', 'name': '繁體中文', 'og': 'zh_TW'},
-    {'code': 'zh-hans', 'tag': 'zh-Hans', 'name': '简体中文', 'og': 'zh_CN'},
+    {'code': 'en', 'tag': 'en', 'name': 'English', 'og': 'en_US', 'offer': 'Read this page in English'},
+    {'code': 'es', 'tag': 'es', 'name': 'Español', 'og': 'es_ES', 'offer': 'Leer esta página en español'},
+    {'code': 'de', 'tag': 'de', 'name': 'Deutsch', 'og': 'de_DE', 'offer': 'Diese Seite auf Deutsch lesen'},
+    {'code': 'fr', 'tag': 'fr', 'name': 'Français', 'og': 'fr_FR', 'offer': 'Lire cette page en français'},
+    {'code': 'it', 'tag': 'it', 'name': 'Italiano', 'og': 'it_IT', 'offer': 'Leggi questa pagina in italiano'},
+    {'code': 'pt', 'tag': 'pt-BR', 'name': 'Português', 'og': 'pt_BR', 'offer': 'Ler esta página em português', 'reach': 'pt'},
+    {'code': 'ja', 'tag': 'ja', 'name': '日本語', 'og': 'ja_JP', 'offer': 'このページを日本語で読む'},
+    {'code': 'ko', 'tag': 'ko', 'name': '한국어', 'og': 'ko_KR', 'offer': '이 페이지를 한국어로 보기'},
+    {'code': 'zh-hant', 'tag': 'zh-Hant', 'name': '繁體中文', 'og': 'zh_TW', 'offer': '以繁體中文閱讀本頁'},
+    {'code': 'zh-hans', 'tag': 'zh-Hans', 'name': '简体中文', 'og': 'zh_CN', 'offer': '用简体中文阅读本页'},
 ]
+for _l in LANGS:
+    _l.setdefault('reach', _l['tag'])
 BY_CODE = {l['code']: l for l in LANGS}
 CJK = {'ja', 'ko', 'zh-hant', 'zh-hans'}
 # Cardo has no Chinese, Japanese or Korean letters, so display type falls back to a serif the reader's device already has.
@@ -43,7 +48,7 @@ CJK_SERIF = {
 }
 
 # Addresses that are the same file for every language.
-SHARED = ('/images/', '/fonts/', '/css/', '/js/', '/press/', '/favicon.svg', '/writing/feed.xml')
+SHARED = ('/images/', '/fonts/', '/css/', '/js/', '/press/', '/favicon.svg')
 
 # Names that stay as they are in every language.
 KEEP = {
@@ -216,6 +221,10 @@ class Translator:
                     return core
                 for name, value in m.groupdict().items():
                     pattern = pattern.replace('{' + name + '}', value)
+                    if name == 'time' and not RE_NOTE.match(value):
+                        # A length of time is ordinary words, and they change form inside a sentence in most
+                        # languages, so the whole sentence needs its own translation. Until it has one, say so.
+                        self.missing.setdefault(core, self.page)
                 return pattern
         self.missing.setdefault(core, self.page)
         return core
@@ -227,15 +236,37 @@ TEXT_NODE = re.compile(r'>([^<>]+)<')
 ATTRS = re.compile(r'\b(alt|aria-label|placeholder)="([^"]*)"')
 META = re.compile(r'(<meta (?:name="description"|property="og:(?:title|description)") content=")([^"]*)(")')
 HREF = re.compile(r'\b(href|action)="(/[^"#]*)')
+HEADING = re.compile(r'<(h[1-3])\b([^>]*)>(.*?)</\1>', re.S)
+HAS_CJK = re.compile(r'[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af\uff00-\uffef]')
+
+
+def mark_latin_headings(doc):
+    """On a Chinese, Japanese or Korean page, mark headings that are still in Latin letters (a name, the duo).
+    They keep the tight line spacing drawn for Cardo; the taller spacing in site.css is for CJK characters."""
+    def mark(m):
+        if 'data-latin' in m.group(2) or HAS_CJK.search(re.sub(r'<[^>]+>', '', m.group(3))):
+            return m.group(0)
+        return f'<{m.group(1)}{m.group(2)} data-latin>{m.group(3)}</{m.group(1)}>'
+    return HEADING.sub(mark, doc)
+
+
+LANG_LINK = re.compile(r'<a\b[^>]*\bhreflang="[^>]*>')
 
 
 def localise_links(doc, code):
+    """Point the page's own links at the same language. Links to another language already say where they go."""
     def swap(m):
         path = m.group(2)
         if path.startswith(SHARED) or path.startswith(f'/{code}/'):
             return m.group(0)
         return f'{m.group(1)}="/{code}{path}'
-    return HREF.sub(swap, doc)
+    out, last = [], 0
+    for m in LANG_LINK.finditer(doc):
+        out.append(HREF.sub(swap, doc[last:m.start()]))
+        out.append(m.group(0))
+        last = m.end()
+    out.append(HREF.sub(swap, doc[last:]))
+    return ''.join(out)
 
 
 def translate_page(doc, tr, page_path):
@@ -256,6 +287,7 @@ def translate_page(doc, tr, page_path):
     if tr.code in CJK:
         work = work.replace('font-style: italic', 'font-style: normal')      # slanted CJK text is hard to read
         work = work.replace('font-family: Cardo, Georgia, serif', 'font-family: ' + CJK_SERIF[tr.code])
+        work = mark_latin_headings(work)
     return work
 
 
@@ -264,8 +296,7 @@ def collect_strings(pages):
     probe = Translator('en')
     probe.catalog = {}
     for path, doc in pages:
-        if path != '/404.html':                     # the not-found page exists in English only
-            translate_page(doc, probe, path)
+        translate_page(doc, probe, path)
     found = dict(probe.missing)
     for key in TEMPLATES + EXTRA:
         found.setdefault(key, '(used on several pages)')

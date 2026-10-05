@@ -29,11 +29,83 @@
     if (location.hash === '#menu') open();
   }
 
+  // Languages.
+  // The visitor's browser languages, most wanted first, lower case: ['ja', 'en-us', ...].
+  var wanted = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''])
+    .map(function (t) { return String(t).toLowerCase(); }).filter(Boolean);
+  var chinese = function (t) { return /hant|-tw|-hk|-mo/.test(t) ? 'zh-hant' : 'zh-hans'; };
+
   // "Other languages": ask the automatic translator for the visitor's own language.
   document.querySelectorAll('a[data-auto-translate]').forEach(function (a) {
-    var want = (navigator.language || '').trim();
-    if (want && !/^en\b/i.test(want)) a.href += '&tl=' + encodeURIComponent(want);
+    var t = wanted[0] || '';
+    var tl = t.indexOf('zh') === 0 ? (chinese(t) === 'zh-hant' ? 'zh-TW' : 'zh-CN') : t.split('-')[0];
+    if (tl && tl !== 'en') a.href += '&tl=' + encodeURIComponent(tl);
   });
+
+  // The list under the language button: open and close in place, close on Escape or a click elsewhere.
+  var panel = document.getElementById('lang');
+  var langButton = document.querySelector('[data-lang-open]');
+  if (panel && langButton) {
+    var shown = function () { return panel.classList.contains('is-open') || location.hash === '#lang'; };
+    var hidePanel = function (refocus) {
+      panel.classList.remove('is-open');
+      langButton.setAttribute('aria-expanded', 'false');
+      if (location.hash === '#lang') history.replaceState(null, '', location.pathname + location.search);
+      if (refocus) langButton.focus();
+    };
+    var showPanel = function () {
+      panel.classList.add('is-open');
+      langButton.setAttribute('aria-expanded', 'true');
+      var first = panel.querySelector('a[aria-current]') || panel.querySelector('a[data-lang]');
+      if (first) first.focus({ preventScroll: true });
+    };
+    langButton.setAttribute('aria-expanded', String(shown()));
+    langButton.addEventListener('click', function (e) { e.preventDefault(); if (shown()) hidePanel(true); else showPanel(); });
+    panel.querySelectorAll('[data-lang-close]').forEach(function (el) {
+      el.addEventListener('click', function (e) { e.preventDefault(); hidePanel(true); });
+    });
+    document.addEventListener('click', function (e) {
+      if (shown() && !panel.contains(e.target) && !langButton.contains(e.target)) hidePanel(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && shown()) hidePanel(true); });
+  }
+
+  // Offer the visitor's own language once. Nothing is redirected: the page stays as it is until they choose.
+  // The choice (or the refusal) is remembered in this browser, so the offer does not come back.
+  var remember = function (code) { try { localStorage.setItem('kj-lang', code); } catch (err) { /* private window: ask again next time */ } };
+  var remembered = null;
+  try { remembered = localStorage.getItem('kj-lang'); } catch (err) { remembered = null; }
+  document.querySelectorAll('a[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { remember(a.getAttribute('data-lang')); });
+  });
+  if (panel && !remembered) {
+    var here = panel.getAttribute('data-current');
+    var have = {};
+    panel.querySelectorAll('a[data-lang]').forEach(function (a) { have[a.getAttribute('data-lang')] = a; });
+    var best = null;
+    for (var i = 0; i < wanted.length && !best; i++) {
+      var code = wanted[i].indexOf('zh') === 0 ? chinese(wanted[i]) : wanted[i].split('-')[0];
+      if (have[code]) best = code;
+    }
+    if (best && best !== here) {
+      var offer = document.createElement('div');
+      offer.className = 'lang-offer';
+      var go = document.createElement('a');
+      go.href = have[best].getAttribute('href');
+      go.lang = have[best].lang;
+      go.textContent = have[best].getAttribute('data-offer');
+      go.addEventListener('click', function () { remember(best); });
+      var no = document.createElement('button');
+      no.type = 'button';
+      var closeLabel = panel.querySelector('[data-lang-close]');
+      no.setAttribute('aria-label', closeLabel ? closeLabel.getAttribute('aria-label') : 'Close');
+      no.innerHTML = '<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="22" y2="22"></line><line x1="22" y1="2" x2="2" y2="22"></line></svg>';
+      no.addEventListener('click', function () { remember(here); offer.remove(); });
+      offer.appendChild(go);
+      offer.appendChild(no);
+      document.body.appendChild(offer);
+    }
+  }
 
   // Contact form: with no form service set, hand the message to the visitor's mail app.
   var form = document.querySelector('form[data-mailto]');

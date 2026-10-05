@@ -11,7 +11,7 @@
 <link rel="alternate" hreflang="de" href="https://kellumjones.com/de/teaching/">
 <link rel="alternate" hreflang="fr" href="https://kellumjones.com/fr/teaching/">
 <link rel="alternate" hreflang="it" href="https://kellumjones.com/it/teaching/">
-<link rel="alternate" hreflang="pt-BR" href="https://kellumjones.com/pt/teaching/">
+<link rel="alternate" hreflang="pt" href="https://kellumjones.com/pt/teaching/">
 <link rel="alternate" hreflang="ja" href="https://kellumjones.com/ja/teaching/">
 <link rel="alternate" hreflang="ko" href="https://kellumjones.com/ko/teaching/">
 <link rel="alternate" hreflang="zh-Hant" href="https://kellumjones.com/zh-hant/teaching/">
@@ -28,7 +28,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/cardo-regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/site.css">
-<link rel="alternate" type="application/rss+xml" title="Kellum Jones: writing" href="/writing/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Kellum Jones: Scritti" href="/it/writing/feed.xml">
 </head>
 <body>
 <a class="skip" href="#main">Vai al contenuto</a>
@@ -37,7 +37,7 @@
 <header id="top" class="p-band on-dark" style="position: relative; display: flex; flex-direction: column; background: #081918; color: #f0ead6; overflow: hidden">
 <div style="position: relative; box-sizing: border-box; width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto; padding: 22px clamp(16px, 2.5cqw, 32px) 0; display: flex; justify-content: space-between; align-items: center; gap: 16px">
 <a href="/it/" style="display: inline-flex; align-items: center; min-height: 44px; color: #f0ead6; text-decoration: none; font-family: Cardo, Georgia, serif; font-size: 26px; line-height: 32px" translate="no">Kellum Jones</a>
-<div style="display: flex; align-items: center; gap: clamp(8px, 2cqw, 24px)"><a href="#languages" class="lang-btn" aria-label="Lingua" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; color: #f0ead6; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"></circle><ellipse cx="10" cy="10" rx="3.6" ry="8.5"></ellipse><line x1="1.5" y1="10" x2="18.5" y2="10"></line></svg><span class="lang-name" translate="no">Italiano</span></a><a href="#menu" data-menu-open aria-label="Apri il menu" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 4px; color: #f0ead6; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><span>Menu</span><svg aria-hidden="true" width="32" height="20" viewBox="0 0 32 20" fill="none" stroke="currentColor" stroke-width="2"><line x1="0" y1="2" x2="32" y2="2"></line><line x1="0" y1="10" x2="32" y2="10"></line><line x1="0" y1="18" x2="32" y2="18"></line></svg></a></div>
+<div style="display: flex; align-items: center; gap: clamp(8px, 2cqw, 24px)"><a href="#lang" class="lang-btn" data-lang-open aria-controls="lang" aria-label="Lingua" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; color: #f0ead6; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8.5"></circle><ellipse cx="10" cy="10" rx="3.6" ry="8.5"></ellipse><line x1="1.5" y1="10" x2="18.5" y2="10"></line></svg><span class="lang-name" translate="no">Italiano</span></a><a href="#menu" data-menu-open aria-label="Apri il menu" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 4px; color: #f0ead6; text-decoration: none; font-size: 15px; line-height: 20px; font-weight: 500"><span>Menu</span><svg aria-hidden="true" width="32" height="20" viewBox="0 0 32 20" fill="none" stroke="currentColor" stroke-width="2"><line x1="0" y1="2" x2="32" y2="2"></line><line x1="0" y1="10" x2="32" y2="10"></line><line x1="0" y1="18" x2="32" y2="18"></line></svg></a></div>
 </div>
 <div style="position: relative; box-sizing: border-box; width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto; margin-top: auto; padding: 96px clamp(16px, 2.5cqw, 32px) 48px; display: flex; flex-direction: column; gap: 20px">
 <svg aria-hidden="true" width="76" height="36" viewBox="0 0 76 36" fill="none" stroke="#b4505c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display: block"><path d="M6 32 V9 H30 V32"></path><rect x="6" y="6" width="24" height="5" fill="#b4505c" stroke="none"></rect><path d="M46 8 L57 32 L68 8"></path></svg>
@@ -45,11 +45,31 @@
 </div>
 </header>
 
+<nav id="lang" class="lang-panel" aria-label="Lingua" data-current="it">
+<div class="lang-panel-top">
+<span>Lingua</span>
+<a href="#top" data-lang-close aria-label="Chiudi"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="2" x2="22" y2="22"></line><line x1="22" y1="2" x2="2" y2="22"></line></svg></a>
+</div>
+<div class="lang-panel-list">
+<a href="/teaching/" lang="en" hreflang="en" data-lang="en" data-offer="Read this page in English" translate="no">English</a>
+<a href="/es/teaching/" lang="es" hreflang="es" data-lang="es" data-offer="Leer esta página en español" translate="no">Español</a>
+<a href="/de/teaching/" lang="de" hreflang="de" data-lang="de" data-offer="Diese Seite auf Deutsch lesen" translate="no">Deutsch</a>
+<a href="/fr/teaching/" lang="fr" hreflang="fr" data-lang="fr" data-offer="Lire cette page en français" translate="no">Français</a>
+<a href="/it/teaching/" lang="it" hreflang="it" data-lang="it" data-offer="Leggi questa pagina in italiano" translate="no" aria-current="true">Italiano</a>
+<a href="/pt/teaching/" lang="pt-BR" hreflang="pt" data-lang="pt" data-offer="Ler esta página em português" translate="no">Português</a>
+<a href="/ja/teaching/" lang="ja" hreflang="ja" data-lang="ja" data-offer="このページを日本語で読む" translate="no">日本語</a>
+<a href="/ko/teaching/" lang="ko" hreflang="ko" data-lang="ko" data-offer="이 페이지를 한국어로 보기" translate="no">한국어</a>
+<a href="/zh-hant/teaching/" lang="zh-Hant" hreflang="zh-Hant" data-lang="zh-hant" data-offer="以繁體中文閱讀本頁" translate="no">繁體中文</a>
+<a href="/zh-hans/teaching/" lang="zh-Hans" hreflang="zh-Hans" data-lang="zh-hans" data-offer="用简体中文阅读本页" translate="no">简体中文</a>
+<a href="https://translate.google.com/translate?sl=en&amp;u=https://kellumjones.com/teaching/" data-auto-translate rel="nofollow noopener">Altre lingue (traduzione automatica)</a>
+</div>
+</nav>
+
 <main id="main">
 
 <section style="box-sizing: border-box; width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto; padding: 96px clamp(16px, 2.5cqw, 32px) 0; display: flex; flex-wrap: wrap-reverse; align-items: flex-end; gap: 48px clamp(32px, 10cqw, 128px)">
 <div style="flex: 7 1 420px; display: flex; flex-direction: column; gap: 24px">
-<p style="margin: 0; max-width: 640px; font-family: Cardo, Georgia, serif; font-size: clamp(26px, 2.5cqw, 32px); line-height: 1.3">Le lezioni partono da come tieni l'arco e da come ascolti.</p>
+<p style="margin: 0; max-width: 640px; font-family: Cardo, Georgia, serif; font-size: clamp(26px, 2.5cqw, 32px); line-height: 1.3">Le lezioni partono da come tieni l’arco e da come ascolti.</p>
 <p style="margin: 0; max-width: 600px">Insegno contrabbasso a principianti, a chi suona nelle orchestre scolastiche e giovanili e a studenti che si preparano per le audizioni. Faccio parte del corpo docente di contrabbasso della LaGrange Youth Symphony Orchestra e conduco incontri settimanali di tecnica per gli studenti della Schwob School of Music.</p>
 <p style="margin: 0; max-width: 600px">[Your approach in your own words: two or three sentences on what a student can expect from you and what you expect from them.]</p>
 <a href="/it/contact/" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; line-height: 20px; font-weight: 500">Chiedi informazioni sulle lezioni</a>
@@ -68,22 +88,22 @@
 <div style="display: flex; flex-wrap: wrap; gap: 8px 32px; padding: 32px 0; border-top: 1px solid #b7b09a">
 <span style="flex: 0 0 104px; font-family: Cardo, Georgia, serif; font-size: 48px; line-height: 48px; color: #7a2531">1</span>
 <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 8px">
-<h3 style="margin: 0; font-family: Cardo, Georgia, serif; font-size: 28px; line-height: 34px; font-weight: 400">Il suono e l'arco</h3>
-<p style="margin: 0; max-width: 560px">L'impugnatura dell'arco, il peso del braccio, il punto di contatto e i cambi di corda. L'arco alla tedesca è il mio strumento. [Say here whether you also take French bow students.]</p>
+<h3 style="margin: 0; font-family: Cardo, Georgia, serif; font-size: 28px; line-height: 34px; font-weight: 400">Il suono e l’arco</h3>
+<p style="margin: 0; max-width: 560px">L’impugnatura dell’arco, il peso del braccio, il punto di contatto e i cambi di corda. L’arco alla tedesca è il mio strumento. [Say here whether you also take French bow students.]</p>
 </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 8px 32px; padding: 32px 0; border-top: 1px solid #b7b09a">
 <span style="flex: 0 0 104px; font-family: Cardo, Georgia, serif; font-size: 48px; line-height: 48px; color: #7a2531">2</span>
 <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 8px">
 <h3 style="margin: 0; font-family: Cardo, Georgia, serif; font-size: 28px; line-height: 34px; font-weight: 400">La mano sinistra</h3>
-<p style="margin: 0; max-width: 560px">Cambi di posizione, intonazione e un'impostazione della mano che resta rilassata su tutta la tastiera.</p>
+<p style="margin: 0; max-width: 560px">Cambi di posizione, intonazione e un’impostazione della mano che resta rilassata su tutta la tastiera.</p>
 </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 8px 32px; padding: 32px 0; border-top: 1px solid #b7b09a; border-bottom: 1px solid #b7b09a">
 <span style="flex: 0 0 104px; font-family: Cardo, Georgia, serif; font-size: 48px; line-height: 48px; color: #7a2531">3</span>
 <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 8px">
 <h3 style="margin: 0; font-family: Cardo, Georgia, serif; font-size: 28px; line-height: 34px; font-weight: 400">Come studiare</h3>
-<p style="margin: 0; max-width: 560px">Come organizzare un'ora, cosa fare quando un passaggio non migliora e come capire se il lavoro sta dando frutti.</p>
+<p style="margin: 0; max-width: 560px">Come organizzare un’ora, cosa fare quando un passaggio non migliora e come capire se il lavoro sta dando frutti.</p>
 </div>
 </div>
 </div>
@@ -147,16 +167,16 @@
 </nav>
 </div>
 <nav id="languages" class="langs" aria-label="Lingua" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0 24px; margin-bottom: -40px; padding-top: 16px; border-top: 1px solid #4a463b">
-<a href="/it/teaching/" lang="en" hreflang="en" translate="no">English</a>
-<a href="/it/es/teaching/" lang="es" hreflang="es" translate="no">Español</a>
-<a href="/it/de/teaching/" lang="de" hreflang="de" translate="no">Deutsch</a>
-<a href="/it/fr/teaching/" lang="fr" hreflang="fr" translate="no">Français</a>
-<a href="/it/teaching/" lang="it" hreflang="it" translate="no" aria-current="true">Italiano</a>
-<a href="/it/pt/teaching/" lang="pt-BR" hreflang="pt-BR" translate="no">Português</a>
-<a href="/it/ja/teaching/" lang="ja" hreflang="ja" translate="no">日本語</a>
-<a href="/it/ko/teaching/" lang="ko" hreflang="ko" translate="no">한국어</a>
-<a href="/it/zh-hant/teaching/" lang="zh-Hant" hreflang="zh-Hant" translate="no">繁體中文</a>
-<a href="/it/zh-hans/teaching/" lang="zh-Hans" hreflang="zh-Hans" translate="no">简体中文</a>
+<a href="/teaching/" lang="en" hreflang="en" data-lang="en" translate="no">English</a>
+<a href="/es/teaching/" lang="es" hreflang="es" data-lang="es" translate="no">Español</a>
+<a href="/de/teaching/" lang="de" hreflang="de" data-lang="de" translate="no">Deutsch</a>
+<a href="/fr/teaching/" lang="fr" hreflang="fr" data-lang="fr" translate="no">Français</a>
+<a href="/it/teaching/" lang="it" hreflang="it" data-lang="it" translate="no" aria-current="true">Italiano</a>
+<a href="/pt/teaching/" lang="pt-BR" hreflang="pt" data-lang="pt" translate="no">Português</a>
+<a href="/ja/teaching/" lang="ja" hreflang="ja" data-lang="ja" translate="no">日本語</a>
+<a href="/ko/teaching/" lang="ko" hreflang="ko" data-lang="ko" translate="no">한국어</a>
+<a href="/zh-hant/teaching/" lang="zh-Hant" hreflang="zh-Hant" data-lang="zh-hant" translate="no">繁體中文</a>
+<a href="/zh-hans/teaching/" lang="zh-Hans" hreflang="zh-Hans" data-lang="zh-hans" translate="no">简体中文</a>
 <a href="https://translate.google.com/translate?sl=en&amp;u=https://kellumjones.com/teaching/" data-auto-translate rel="nofollow noopener">Altre lingue (traduzione automatica)</a>
 </nav>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 32px; padding-top: 16px; border-top: 1px solid #4a463b">
@@ -190,16 +210,16 @@
 <a href="/it/contact/">Contatti</a>
 </div>
 <div class="menu-langs" aria-label="Lingua">
-<a href="/it/teaching/" lang="en" hreflang="en" translate="no">English</a>
-<a href="/it/es/teaching/" lang="es" hreflang="es" translate="no">Español</a>
-<a href="/it/de/teaching/" lang="de" hreflang="de" translate="no">Deutsch</a>
-<a href="/it/fr/teaching/" lang="fr" hreflang="fr" translate="no">Français</a>
-<a href="/it/teaching/" lang="it" hreflang="it" translate="no" aria-current="true">Italiano</a>
-<a href="/it/pt/teaching/" lang="pt-BR" hreflang="pt-BR" translate="no">Português</a>
-<a href="/it/ja/teaching/" lang="ja" hreflang="ja" translate="no">日本語</a>
-<a href="/it/ko/teaching/" lang="ko" hreflang="ko" translate="no">한국어</a>
-<a href="/it/zh-hant/teaching/" lang="zh-Hant" hreflang="zh-Hant" translate="no">繁體中文</a>
-<a href="/it/zh-hans/teaching/" lang="zh-Hans" hreflang="zh-Hans" translate="no">简体中文</a>
+<a href="/teaching/" lang="en" hreflang="en" data-lang="en" translate="no">English</a>
+<a href="/es/teaching/" lang="es" hreflang="es" data-lang="es" translate="no">Español</a>
+<a href="/de/teaching/" lang="de" hreflang="de" data-lang="de" translate="no">Deutsch</a>
+<a href="/fr/teaching/" lang="fr" hreflang="fr" data-lang="fr" translate="no">Français</a>
+<a href="/it/teaching/" lang="it" hreflang="it" data-lang="it" translate="no" aria-current="true">Italiano</a>
+<a href="/pt/teaching/" lang="pt-BR" hreflang="pt" data-lang="pt" translate="no">Português</a>
+<a href="/ja/teaching/" lang="ja" hreflang="ja" data-lang="ja" translate="no">日本語</a>
+<a href="/ko/teaching/" lang="ko" hreflang="ko" data-lang="ko" translate="no">한국어</a>
+<a href="/zh-hant/teaching/" lang="zh-Hant" hreflang="zh-Hant" data-lang="zh-hant" translate="no">繁體中文</a>
+<a href="/zh-hans/teaching/" lang="zh-Hans" hreflang="zh-Hans" data-lang="zh-hans" translate="no">简体中文</a>
 <a href="https://translate.google.com/translate?sl=en&amp;u=https://kellumjones.com/teaching/" data-auto-translate rel="nofollow noopener">Altre lingue (traduzione automatica)</a>
 </div>
 <div class="menu-foot">

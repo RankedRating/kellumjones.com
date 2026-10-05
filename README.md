@@ -8,8 +8,10 @@ The website of Kellum Jones, double bassist. A small static site: plain HTML, on
 
 ```
 python3 build.py            # build the site into public/
-python3 build.py --check    # build, then list every [placeholder] still on the site
+python3 build.py --check    # build, then list every [placeholder] and every missing translation
 ```
+
+Every build also follows each link on the finished site and prints a warning if one leads nowhere.
 
 The build needs Python 3 and one package: `pip install -r requirements.txt`.
 
@@ -105,7 +107,9 @@ The Understory Duo page has a Commissions section that stays hidden while the li
 
 ## Languages
 
-The site is written in English and published in ten languages: English at the root, and Spanish, German, French, Italian, Portuguese, Japanese, Korean, Traditional Chinese and Simplified Chinese under `/es/`, `/de/`, `/fr/`, `/it/`, `/pt/`, `/ja/`, `/ko/`, `/zh-hant/` and `/zh-hans/`. Every page links to itself in each language from the header, the menu and the footer. An "Other languages" link sends the page through Google's automatic translation for anyone else.
+The site is written in English and published in ten languages: English at the root, and Spanish, German, French, Italian, Portuguese, Japanese, Korean, Traditional Chinese and Simplified Chinese under `/es/`, `/de/`, `/fr/`, `/it/`, `/pt/`, `/ja/`, `/ko/`, `/zh-hant/` and `/zh-hans/`. Every page links to itself in each language from the globe in the header, the menu and the footer. An "Other languages" link sends the page through Google's automatic translation for anyone else.
+
+A visitor whose browser is set to one of the nine other languages is offered that language once, on a small card at the bottom of the page ("Read this page in ..."). Nothing redirects by itself. Choosing a language, or closing the card, is remembered in that browser and the card does not come back.
 
 How it works:
 
@@ -114,7 +118,9 @@ How it works:
 - To translate new text, add the English string and its translation to each `content/i18n/<code>.json`. `python3 build.py --strings` rewrites `content/i18n/_english.json`, the full list of English text in use. `content/i18n/README.md` is the guide for translators: voice, names, and the agreed musical terms.
 - **Posts** are translated as whole files. Put the translated post at `content/posts/<code>/<same file name>.md` with `title`, `summary` and `standfirst` translated in its header. A post with no translated file is shown in English under a one-line notice in the reader's language.
 - Anything in `[square brackets]` is never translated.
-- `reply_time` in `content/site.json` is shown exactly as typed in every language, so prefer a form that needs no translation, or leave it empty.
+- `reply_time` in `content/site.json` completes the sentence "I reply within ... ." on the Contact page. "a few days" is already translated. For any other wording, add the whole sentence ("I reply within two days.") to each translation file; `--check` lists it until that is done.
+- Each language also gets its own not-found page (`/es/404.html`), its own feed of posts (`/es/writing/feed.xml`) and its own biography sheet in the press kit. All three are made from the same translation files, so there is nothing extra to keep up.
+- The sentence on the offer card and each language's name live in `LANGS` at the top of `i18n.py`.
 
 The translations were written and then independently reviewed, but not by native speakers. Before relying on a language for something important, ask a native-speaking musician to read it.
 
@@ -154,7 +160,7 @@ Photos are blended into the page in three ways, all in `assets/css/site.css`:
 
 ## Press kit
 
-Every build writes `public/press/kellum-jones-press-kit.zip`: both biographies as a text file, plus everything in `assets/images/press/`. Unfinished biography paragraphs (the ones still in square brackets) are left out. To use a different file, set `press_kit` in `content/site.json` to its address.
+Every build writes `public/press/kellum-jones-press-kit.zip`: both biographies as a text file in English, the same sheet in each of the nine other languages (in `biography-translations/`), plus everything in `assets/images/press/`. Unfinished biography paragraphs (the ones still in square brackets) are left out. To use a different file, set `press_kit` in `content/site.json` to its address.
 
 ## Design
 
