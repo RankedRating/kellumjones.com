@@ -1,6 +1,16 @@
 {
   "upcoming": [
     {
+      "date": "2026-11-02",
+      "composer": "Antonín Dvořák",
+      "years": "1841–1904",
+      "work": "Symphony No. 9 in E minor, Op. 95, “From the New World”",
+      "with": "Arranged for double bass quartet by Dominik Wagner · Part of the Schwob Philharmonic concert",
+      "venue": "Legacy Hall, RiverCenter, Columbus, Georgia",
+      "time": "5:00 pm",
+      "ensemble": true
+    },
+    {
       "date": "2026-11-19",
       "composer": "Reinhold Glière",
       "years": "1875–1956",

@@ -370,7 +370,8 @@ def perf_row(item=None, last=False):
         day, month, composer, work = '00', '[Month year]', '[Composer]', '[Work title]'
         with_, where = '[With: pianist, orchestra or ensemble]', '[Venue, city · time]'
         link = f'<a href="{URL["perf"]}" style="{LINK}">Tickets and details</a>'
-    with_html = f'\n<span style="font-size: 15px; line-height: 24px; color: {MUTED}">{with_}</span>' if with_ else ''
+    # each note separated by " · " in the data goes on a line of its own
+    with_html = ''.join(f'\n<span style="font-size: 15px; line-height: 24px; color: {MUTED}">{part}</span>' for part in with_.split(' · ')) if with_ else ''
     if item and item.get('program'):     # one event with several works: the event's name, then each work
         what = f'<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">{esc(item.get("event"))}</span>{with_html}\n' + program_list(item['program'])
     else:
@@ -396,10 +397,10 @@ def perf_row(item=None, last=False):
 
 
 def upcoming_items(group=None):
-    """Upcoming performances in date order, those with no date yet last. group='duo' or 'solo' keeps only that kind."""
+    """Upcoming performances in date order, those with no date yet last. group='solo', 'duo' or 'ensemble' keeps only that kind."""
     items = sorted(PERF.get('upcoming', []), key=lambda i: (not i.get('date'), i.get('date', '')))
     if group:
-        items = [i for i in items if bool(i.get('duo')) == (group == 'duo')]
+        items = [i for i in items if ('duo' if i.get('duo') else 'ensemble' if i.get('ensemble') else 'solo') == group]
     return items
 
 
@@ -736,12 +737,14 @@ def build_perf():
 </div>
 </section>""" if HAS_VIDEO else ''
     eyebrow = f'<span style="{META}">Upcoming</span>'
-    solo, duo = upcoming_items('solo'), upcoming_items('duo')
+    solo, duo, ensemble = upcoming_items('solo'), upcoming_items('duo'), upcoming_items('ensemble')
     sections = []
-    if solo or not duo:
+    if solo or not (duo or ensemble):
         sections.append(split(eyebrow + chr(10) + f'<h2 style="{H2}">Solo</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3, 'solo'), sec_id='upcoming', first=True))
     if duo:
         sections.append(split(eyebrow + chr(10) + f'<h2 style="{H2}">Understory Duo</h2>' + chr(10) + f'<a href="{URL["duo"]}" style="{LINK}">About the duo</a>' + chr(10) + f'<img class="wide-only" src="{IMG["duo"]}" alt="Kellum Jones and Hsin Yeh of Understory Duo" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 8px; aspect-ratio: 4 / 3; object-fit: cover; object-position: 75% 50%">', upcoming_rows(50, 0, 'duo'), sec_id='duo-performances', first=not sections))
+    if ensemble:                          # chamber groups and orchestra concerts
+        sections.append(split(eyebrow + chr(10) + f'<h2 style="{H2}">Ensemble</h2>', upcoming_rows(50, 0, 'ensemble'), sec_id='ensemble-performances', first=not sections))
     main = f"""{(chr(10) + chr(10)).join(sections)}
 
 {watch}
