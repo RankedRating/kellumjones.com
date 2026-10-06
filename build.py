@@ -335,9 +335,11 @@ def perf_row(item=None, last=False):
     bb = f'; border-bottom: {RULE}' if last else ''
     if item:
         d = parse_date(item.get('date'))
-        day = str(d.day) if d else '00'
-        month = f'{MONTHS[d.month - 1][:3]} {d.year}' if d else '[Month year]'
+        day = str(d.day) if d else ''                 # no date yet: the row says so in place of the day
+        month = f'{MONTHS[d.month - 1][:3]} {d.year}' if d else ''
         composer, work = esc(item.get('composer')), esc(item.get('work'))
+        if item.get('years'):                         # the composer's dates, for example 1867–1944
+            composer = f'<span>{composer}</span> <span style="font-weight: 400; color: {MUTED}">({esc(item["years"])})</span>'
         with_ = esc(item.get('with'))
         where = ' · '.join(x for x in [esc(item.get('venue')), esc(item.get('time')).replace(' ', '&nbsp;')] if x)   # the time never breaks across lines
         link = f'<a href="{esc(item["link"])}" style="{LINK}">Tickets and details</a>' if item.get('link') else ''
@@ -348,10 +350,14 @@ def perf_row(item=None, last=False):
         with_, where = '[With: pianist, orchestra or ensemble]', '[Venue, city · time]'
         link = f'<a href="{URL["perf"]}" style="{LINK}">Tickets and details</a>'
     with_html = f'\n<span style="font-size: 15px; line-height: 24px; color: {MUTED}">{with_}</span>' if with_ else ''
+    if day:
+        when = f"""<span style="font-family: {SERIF}; font-size: 48px; line-height: 48px; color: {OXINK}">{day}</span>
+<span style="font-size: 14px; line-height: 18px; font-weight: 500; color: {MUTED}">{month}</span>"""
+    else:
+        when = f'<span style="font-family: {SERIF}; font-style: italic; font-size: 22px; line-height: 28px; color: {OXINK}">Date to be announced</span>'
     return f"""<div style="display: flex; flex-wrap: wrap; gap: 16px 32px; padding: 32px 0; border-top: {RULE}{bb}">
 <div style="flex: 0 0 136px; display: flex; flex-direction: column; gap: 4px">
-<span style="font-family: {SERIF}; font-size: 48px; line-height: 48px; color: {OXINK}">{day}</span>
-<span style="font-size: 14px; line-height: 18px; font-weight: 500; color: {MUTED}">{month}</span>
+{when}
 </div>
 <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">{composer}</span>
@@ -365,7 +371,8 @@ def perf_row(item=None, last=False):
 
 
 def upcoming_rows(limit, placeholders):
-    items = sorted(PERF.get('upcoming', []), key=lambda i: i.get('date', ''))[:limit]
+    # in date order; performances with no date yet come last
+    items = sorted(PERF.get('upcoming', []), key=lambda i: (not i.get('date'), i.get('date', '')))[:limit]
     rows = items if items else [None] * placeholders
     return '\n'.join(perf_row(r, last=(n == len(rows) - 1)) for n, r in enumerate(rows))
 
