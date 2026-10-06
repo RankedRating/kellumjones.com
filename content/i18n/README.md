@@ -16,6 +16,8 @@ Plain, warm and direct. No sales language, no exclamation marks, no flourishes t
 
 Translate the meaning faithfully. Do not add, drop or embellish. Buttons and menu items must stay short.
 
+Faithful does not mean word for word. A native reader found the first Chinese version too close to the English and said it read as machine translated, so both Chinese files were rewritten the way a Chinese-speaking musician would write them: same facts, natural sentences. Hold every language to that standard. Restructure sentences, drop pronouns and connectives the language does not need, and use the set phrases of the genre (an artist biography, a teacher's page), but never change, add or leave out a fact.
+
 ## Rules for the files
 
 - Keep every key exactly as it is in `_english.json`, and give every key a value.
