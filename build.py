@@ -87,13 +87,13 @@ def slugify(text):
 # ------------------------------------------------------------------ biography text (used on the page and in the press kit)
 BIO_LEAD = 'Kellum Jones is a double bassist based in Columbus, Georgia, building a career as a soloist and teacher.'
 BIO_PARAS = [
-    'He studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, and has taken summer lessons with the soloist Mikyung Sung. He plays the German bow in the Viennese tradition of Ludwig Streicher.',
-    'In his second year of playing, Kellum was using the French bow. Watching countless videos of other bassists, he came across the players of the Viennese bow hold, most notably Ludwig Streicher, and soon bought his first German bow. The change was uncomfortable at first, and he came close to going back to the French bow. A masterclass with Mikyung Sung, whose bow hold is very similar to Streicher’s, kept him on it. What drew him in was the lightness and clarity of sound that the German bow allows.',
-    'Alongside his own playing, Kellum teaches. He is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he works with beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob. He also teaches privately in Columbus and online, taking students at every level and from any starting point, with the aim of giving each of them a foundation that holds under pressure.',
-    'With the pianist Hsin Yeh he performs as Understory Duo. The duo commissions new work from living composers, so that up-and-coming composers can grow the repertoire for double bass and piano. It also offers education for its community, showing the beauty of the double bass and the unique sound it makes together with the piano.',
-    'Looking ahead, his goal is to continue building toward a solo career. He writes about practice and the German bow in the notebook on this site.',
+    'Kellum studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, has taken summer lessons with the soloist Mikyung Sung, and plays the German bow in the Viennese tradition of Ludwig Streicher.',
+    'The German bow came second. In the second year of playing, and still on the French bow, Kellum came across the players of the Viennese bow hold, most notably Ludwig Streicher, and soon bought a first German bow. The change was uncomfortable, and going back to the French bow was a real possibility. A masterclass with Mikyung Sung, whose bow hold closely resembles Streicher’s, made the difference. What won Kellum over was the sound: the lightness and clarity that the German bow allows.',
+    'Kellum is also a teacher. As a member of the double bass faculty of the LaGrange Youth Symphony Orchestra, Kellum works with beginning and intermediate players, and at Schwob leads weekly sessions on technique and musicianship for students. Private lessons, in Columbus and online, are open to students at every level and from any starting point, with the aim of giving each one a foundation that holds under pressure.',
+    'With the pianist Hsin Yeh, Kellum performs as Understory Duo. The duo commissions new work from living composers, so that up-and-coming composers can grow the repertoire for double bass and piano, and offers education for its community, showing the beauty of the double bass and the unique sound it makes together with the piano.',
+    'Kellum’s goal is to keep building toward a solo career. Practice and the German bow are the subjects of the notebook on this site.',
 ]
-BIO_SHORT = 'Kellum Jones is a double bassist based in Columbus, Georgia. He studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra and performs with the pianist Hsin Yeh as Understory Duo, commissioning new work for double bass and piano from living composers.'
+BIO_SHORT = 'Kellum Jones is a double bassist based in Columbus, Georgia. A student of Dr. Luca Lombardi at the Schwob School of Music, Kellum plays the German bow in the Viennese tradition, teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra, and performs with the pianist Hsin Yeh as Understory Duo, commissioning new work for double bass and piano from living composers.'
 KIT_URL = '/press/kellum-jones-press-kit.zip'
 
 # Hsin Yeh's biography, shown on the Understory Duo page
@@ -370,9 +370,16 @@ def perf_row(item=None, last=False):
 </div>"""
 
 
-def upcoming_rows(limit, placeholders):
-    # in date order; performances with no date yet come last
-    items = sorted(PERF.get('upcoming', []), key=lambda i: (not i.get('date'), i.get('date', '')))[:limit]
+def upcoming_items(group=None):
+    """Upcoming performances in date order, those with no date yet last. group='duo' or 'solo' keeps only that kind."""
+    items = sorted(PERF.get('upcoming', []), key=lambda i: (not i.get('date'), i.get('date', '')))
+    if group:
+        items = [i for i in items if bool(i.get('duo')) == (group == 'duo')]
+    return items
+
+
+def upcoming_rows(limit, placeholders, group=None):
+    items = upcoming_items(group)[:limit]
     rows = items if items else [None] * placeholders
     return '\n'.join(perf_row(r, last=(n == len(rows) - 1)) for n, r in enumerate(rows))
 
@@ -497,7 +504,7 @@ def lead_post(p, tag='h2'):
 <span style="{META}">{post_meta(p, lead=(tag == 'h2'))}</span>
 <{tag} style="margin: 0; max-width: 680px; font-family: {SERIF}; font-size: clamp(40px, 4.4cqw, 56px); line-height: 1.08; font-weight: 400; letter-spacing: -0.01em">{esc(p['title'])}</{tag}>
 <p style="margin: 0; max-width: 600px; font-size: 21px; line-height: 32px">{esc(p['summary'])}</p>
-<a href="{p['url']}" style="{LINK}">Read the post</a>
+<a href="{p['url']}" style="{LINK}">Read more</a>
 </article>"""
 
 
@@ -703,7 +710,14 @@ def build_perf():
 </div>
 </div>
 </section>""" if HAS_VIDEO else ''
-    main = f"""{split(f'<h2 style="{H2}">Upcoming</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3), sec_id='upcoming', first=True)}
+    eyebrow = f'<span style="{META}">Upcoming</span>'
+    solo, duo = upcoming_items('solo'), upcoming_items('duo')
+    sections = []
+    if solo or not duo:
+        sections.append(split(eyebrow + chr(10) + f'<h2 style="{H2}">Solo</h2>' + chr(10) + f'<img class="feather wide-only" src="{IMG["up"]}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 16px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 12%">', upcoming_rows(50, 3, 'solo'), sec_id='upcoming', first=True))
+    if duo:
+        sections.append(split(eyebrow + chr(10) + f'<h2 style="{H2}">Understory Duo</h2>' + chr(10) + f'<a href="{URL["duo"]}" style="{LINK}">About the duo</a>' + chr(10) + f'<img class="wide-only" src="{IMG["duo"]}" alt="Kellum Jones and Hsin Yeh of Understory Duo" loading="lazy" style="display: block; width: 100%; max-width: 360px; margin-top: 8px; aspect-ratio: 4 / 3; object-fit: cover; object-position: 75% 50%">', upcoming_rows(50, 0, 'duo'), sec_id='duo-performances', first=not sections))
+    main = f"""{(chr(10) + chr(10)).join(sections)}
 
 {watch}
 
@@ -892,7 +906,7 @@ def build_duo():
 <img class="feather" src="{IMG['up']}" alt="Kellum Jones standing in a camel coat, looking up" loading="lazy" style="display: block; width: 100%; max-width: 440px; margin-bottom: 12px; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 8%">
 <span style="{META}">Double bass</span>
 <h3 style="{H3}">Kellum Jones</h3>
-<p style="margin: 0; max-width: 520px">Kellum studies at the Schwob School of Music with Dr. Luca Lombardi and plays the German bow in the Viennese tradition. He teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra.</p>
+<p style="margin: 0; max-width: 520px">Kellum studies at the Schwob School of Music with Dr. Luca Lombardi, plays the German bow in the Viennese tradition, and teaches on the double bass faculty of the LaGrange Youth Symphony Orchestra.</p>
 <a href="{URL['bio']}" style="{LINK}">Full biography</a>
 </div>
 <div class="h-drop" style="flex: 6 1 340px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start">
@@ -903,6 +917,8 @@ def build_duo():
 </div>
 </div>
 </section>
+
+{split(f'<h2 style="{H2}">Performances</h2>' + chr(10) + f'<a href="{URL["perf"]}" style="{LINK}">All performances</a>', upcoming_rows(50, 0, 'duo'), sec_id='performances') if upcoming_items('duo') else ''}
 
 {commissions_section()}
 

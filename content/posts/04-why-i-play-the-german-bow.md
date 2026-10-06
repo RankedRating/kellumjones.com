@@ -2,35 +2,35 @@
 title: Why I play the German bow, and how I made the decision
 topic: The German bow
 date: 2026-10-05
-summary: It was my second year of playing bass, and I was lost, not knowing what to do or where I should aim my goals. I was playing the French bow, and I was a big admirer of Rinat Ibragimov.
+summary: In my second year of playing bass, I was lost. I didn’t know what to work on or where to aim.
 sources:
 - Ludwig Streicher, *Mein Musizieren auf dem Kontrabass* (Doblinger)
 ---
 
-It was my second year of playing bass, and I was lost, not knowing what to do or where I should aim my goals. I was playing the French bow, and I was a big admirer of Rinat Ibragimov. I was truly inspired by his playing and his sound production. That led me to make the choice to copy his bow hold, and quite surprisingly it was effective.
+In my second year of playing bass, I was lost. I didn’t know what to work on or where to aim. I was playing the French bow then, and I was a big admirer of Rinat Ibragimov. His playing and his sound inspired me so much that I copied his bow hold, and to my surprise it worked.
 
-I was not familiar at the time with the underhand German bow, and quite frankly I didn't really care much for it.
+At the time I knew almost nothing about the underhand German bow, and frankly I didn’t care much for it.
 
 ## Finding Streicher
 
-It was not until I started to explore more players of the double bass, watching countless videos, that I saw something surprising. I learned about the players of the Viennese bow hold, most notably Ludwig Streicher. It was quite interesting to me what he could do on the bass. I continued watching and admiring his abilities on the instrument, and quickly acquired his method books as well.
+That changed when I started watching other bassists, video after video, and came across the players of the Viennese bow hold, most notably Ludwig Streicher. What he could do on the bass fascinated me. I kept watching, and before long I had bought his method books too.
 
-Soon after, I decided to give it a try, purchasing my first German bow from Brazil. I immediately felt uncomfortable with just about everything relating to this bow hold. I didn't feel my hands and fingers were flexible enough, my arm was stiff as a rock; the list goes on and on. I was frustrated, and very much considering quitting the German bow to return to French.
+Soon after, I bought my first German bow, from Brazil, and gave it a try. Everything about the hold felt wrong. My hand and fingers weren’t flexible enough, my arm was stiff as a rock, and the list went on. I was frustrated, and seriously considering going back to French.
 
 ## A masterclass with Mikyung Sung
 
-It was soon after that I had my first masterclass experience, with the soloist Mikyung Sung. She coincidentally has a very similar bow hold to Streicher, and I again fell in love with her sound production and her ability to make music. During the masterclass I took many videos, and made special notes on what I thought about her bow hold and what I was doing differently that I could apply in my own playing.
+Then came my first masterclass, with the soloist Mikyung Sung. Her bow hold happens to be very close to Streicher’s, and I fell in love all over again with her sound and the way she makes music. I filmed as much as I could and took notes on her bow hold, and on what I was doing differently, so I could bring it into my own playing.
 
-She gave many classes that day, and the most notable was a lesson on spiccato. When she first explained it, the concept made no sense to me. She said to start out by letting the bow drop and almost violently hit the strings with no control whatsoever, and to do it again, and again, and again!
+She taught many students that day, and the lesson I remember best was on spiccato. Her explanation made no sense to me at first. She said to begin by letting the bow drop and hit the string almost violently, with no control at all, and then to do it again, and again, and again!
 
-This was so crazy for me to think of in the first place, but weeks went by where I would replicate this motion over and over, mindlessly, and eventually it wasn't so random of a motion. When I had done it probably tens of thousands of times, the motion made real sense to me.
+It sounded crazy. But for weeks I repeated that motion, mindlessly, and little by little it stopped being random. After what must have been tens of thousands of drops, the motion finally made sense.
 
 > Who would have known that a professional knows what they are talking about. Funny.
 
-I continued to watch more and more educational and performance videos to see how sound production begins, and I would always pause videos of players I admired, looking closely at their fingers, the angle of their wrist, how straight their arm is. This all led to me having a decent idea of what it means to play the German bow.
+I kept watching teaching and performance videos to understand how a sound begins. I would pause on the players I admired and study their fingers, the angle of the wrist, how straight the arm was. Bit by bit, I came to a decent idea of what it means to play the German bow.
 
 ## Is there anything wrong with the French bow?
 
-Not at all! I have the greatest respect for all musicians and their approach to sound. I can appreciate the effort and technical mastery it takes to be a proficient player. For me, the German bow has a certain lightness of sound you can get, which is so smooth and appealing. This clarity of sound is what really drew me in, and ultimately led to my decision to make the switch.
+Not at all! I have the greatest respect for every musician and their approach to sound, and I know the effort and technical mastery it takes to play well. For me, though, the German bow offers a certain lightness of sound, smooth and appealing, and a clarity that drew me in. That is what led me to make the switch.
 
-In my next post, I will speak on how I approach technical mastery of my bow, and what you can do to reach it yourself!
+In my next post, I will write about how I work toward technical mastery of the bow, and what you can do to get there yourself!

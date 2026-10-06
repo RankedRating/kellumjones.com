@@ -9,7 +9,8 @@
       "venue": "Studio Theatre, RiverCenter, Columbus, Georgia",
       "time": "5:00 pm",
       "link": "",
-      "admission": "Free admission"
+      "admission": "Free admission",
+      "duo": true
     },
     {
       "date": "",
