@@ -778,7 +778,7 @@ def build_writing():
 </nav>
 </section>
 
-{split(f'<h2 style="{H2}">All posts</h2>', post_rows(POSTS), sec_id='all')}
+{split(f'<h2 style="{H2}">All posts</h2>', post_rows(POSTS), sec_id='all') if len(POSTS) > 1 else ''}
 
 {NEWSLETTER}"""
     page(URL['writing'], 'Writing · Kellum Jones', 'Notes from the practice room: posts by Kellum Jones on practice, the German bow and new music for double bass.', band('<span>Writing</span>', 'Notes from the practice room', mark='segno'), main, current='writing')

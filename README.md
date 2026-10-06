@@ -69,7 +69,7 @@ First paragraph.
 
 - `topic` is one of: The German bow, Practice lab, New music. To add a topic, add it to `TOPICS` near the top of `build.py`.
 - Posts are listed newest first by `date`. If any post has no date, they are ordered by the number at the start of the file name instead (highest first).
-- Add `draft: true` to the header to keep a post off the site.
+- Add `draft: true` to the header to keep a post off the site. Three of the four planned posts are hidden this way until they are written; delete that line from a post's header to publish it.
 
 Then run `python3 build.py` and publish (below).
 

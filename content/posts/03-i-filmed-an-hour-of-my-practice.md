@@ -1,6 +1,7 @@
 ---
 title: I filmed an hour of my practice. Here is what I actually did
 topic: Practice lab
+draft: true
 date:
 summary: [One-sentence summary.]
 standfirst: [Standfirst: one sentence that tells the reader what they will get from this post.]
