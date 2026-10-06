@@ -331,15 +331,36 @@ def long_date(d):
     return f'{MONTHS[d.month - 1]} {d.day}, {d.year}' if d else '[Date]'
 
 
+def composer_line(item):
+    """The composer's name, followed by their dates when given, for example (1867–1944)."""
+    name = esc(item.get('composer'))
+    if item.get('years'):
+        name = f'<span>{name}</span> <span style="font-weight: 400; color: {MUTED}">({esc(item["years"])})</span>'
+    return name
+
+
+def program_list(works):
+    """The works played at one event. Each has a composer, a title and, optionally, its movements or pieces."""
+    rows = []
+    for w in works:
+        parts = f'\n<span style="font-size: 14px; line-height: 20px; color: {MUTED}">{esc(" · ".join(w["parts"]))}</span>' if w.get('parts') else ''
+        rows.append(f"""<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">{composer_line(w)}</span>
+<span style="font-family: {SERIF}; font-size: 19px; line-height: 26px">{esc(w.get('work'))}</span>{parts}
+</div>""")
+    return f'<div style="display: flex; flex-direction: column; gap: 16px; margin-top: 12px">\n' + '\n'.join(rows) + '\n</div>'
+
+
 def perf_row(item=None, last=False):
     bb = f'; border-bottom: {RULE}' if last else ''
     if item:
         d = parse_date(item.get('date'))
         day = str(d.day) if d else ''                 # no date yet: the row says so in place of the day
+        end = parse_date(item.get('date_end'))        # an event of several days: 7–8
+        if d and end and end > d and (end.year, end.month) == (d.year, d.month):
+            day = f'{d.day}–{end.day}'
         month = f'{MONTHS[d.month - 1][:3]} {d.year}' if d else ''
-        composer, work = esc(item.get('composer')), esc(item.get('work'))
-        if item.get('years'):                         # the composer's dates, for example 1867–1944
-            composer = f'<span>{composer}</span> <span style="font-weight: 400; color: {MUTED}">({esc(item["years"])})</span>'
+        composer, work = composer_line(item), esc(item.get('work'))
         with_ = esc(item.get('with'))
         where = ' · '.join(x for x in [esc(item.get('venue')), esc(item.get('time')).replace(' ', '&nbsp;')] if x)   # the time never breaks across lines
         link = f'<a href="{esc(item["link"])}" style="{LINK}">Tickets and details</a>' if item.get('link') else ''
@@ -350,6 +371,11 @@ def perf_row(item=None, last=False):
         with_, where = '[With: pianist, orchestra or ensemble]', '[Venue, city · time]'
         link = f'<a href="{URL["perf"]}" style="{LINK}">Tickets and details</a>'
     with_html = f'\n<span style="font-size: 15px; line-height: 24px; color: {MUTED}">{with_}</span>' if with_ else ''
+    if item and item.get('program'):     # one event with several works: the event's name, then each work
+        what = f'<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">{esc(item.get("event"))}</span>{with_html}\n' + program_list(item['program'])
+    else:
+        what = f"""<span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">{composer}</span>
+<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">{work}</span>{with_html}"""
     if day:
         when = f"""<span style="font-family: {SERIF}; font-size: 48px; line-height: 48px; color: {OXINK}">{day}</span>
 <span style="font-size: 14px; line-height: 18px; font-weight: 500; color: {MUTED}">{month}</span>"""
@@ -360,8 +386,7 @@ def perf_row(item=None, last=False):
 {when}
 </div>
 <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 15px; line-height: 22px; font-weight: 500; letter-spacing: 0.01em">{composer}</span>
-<span style="font-family: {SERIF}; font-size: 22px; line-height: 30px">{work}</span>{with_html}
+{what}
 </div>
 <div style="flex: 1 1 180px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
 <span style="font-size: 15px; line-height: 24px; color: {MUTED}">{where}</span>

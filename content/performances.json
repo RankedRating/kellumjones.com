@@ -13,6 +13,46 @@
       "duo": true
     },
     {
+      "date": "2027-06-07",
+      "date_end": "2027-06-08",
+      "event": "International Society of Bassists (ISB) Double Bass Competition",
+      "with": "Hsin Yeh, piano",
+      "venue": "University of New Mexico, Albuquerque, New Mexico",
+      "program": [
+        {
+          "composer": "Reinhold Glière",
+          "years": "1875–1956",
+          "work": "Four Pieces for double bass and piano",
+          "parts": [
+            "Prelude",
+            "Scherzo",
+            "Intermezzo",
+            "Tarantella"
+          ]
+        },
+        {
+          "composer": "Vilmos Montag",
+          "years": "1908–1991",
+          "work": "Sonata in E minor for double bass and piano",
+          "parts": [
+            "I. Andante moderato",
+            "II. Andante",
+            "III. Allegro"
+          ]
+        },
+        {
+          "composer": "Robert Schumann",
+          "years": "1810–1856",
+          "work": "Adagio and Allegro, Op. 70"
+        },
+        {
+          "composer": "Luciano Berio",
+          "years": "1925–2003",
+          "work": "Psy, for solo double bass"
+        }
+      ]
+    },
+    {
       "date": "",
       "composer": "Amy Beach",
       "years": "1867–1944",

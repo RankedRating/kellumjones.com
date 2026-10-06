@@ -158,6 +158,7 @@ RE_DM = re.compile(rf'^({_ABBR}) (\d{{1,2}})$')
 RE_TIME = re.compile(r'^(\d{1,2}):(\d{2})\s(am|pm)$')
 RE_PLAIN = re.compile(r'^[\d\s.,:;·©/()\-–—+]*$')           # numbers and punctuation only
 RE_NOTE = re.compile(r'^\[[^\[\]]*\]$')                      # a [note for Kellum]
+RE_MOVEMENT = re.compile(r'^[IVX]+\. [A-Z][a-z]+(?: [a-z]+)*$')   # a numbered movement, I. Andante moderato: the same in every language
 ABBR_INDEX = {m[:3]: i + 1 for i, m in enumerate(EN_MONTHS)}
 
 
@@ -199,7 +200,7 @@ class Translator:
     def _lookup(self, core):
         if core in self.catalog and self.catalog[core]:
             return self.catalog[core]
-        if core in KEEP or RE_PLAIN.match(core) or RE_NOTE.match(core) or '@' in core or core.startswith('©') or '%%' in core:
+        if core in KEEP or RE_PLAIN.match(core) or RE_NOTE.match(core) or RE_MOVEMENT.match(core) or '@' in core or core.startswith('©') or '%%' in core:
             return core
         if ' · ' in core:
             return ' · '.join(self._lookup(part) for part in core.split(' · '))
