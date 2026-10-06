@@ -144,7 +144,7 @@ Run `python3 build.py --check`. It lists every bracketed placeholder still on th
 - [ ] Read and correct the biography and short biography in `build.py` (they are drafts). When there are performance highlights to name, add a paragraph to `BIO_PARAS`
 - [ ] Have Hsin read her biography on the Understory Duo page (`HSIN_BIO` near the top of `build.py`), in English and in Chinese
 - [ ] Add real performances and videos
-- [ ] Write the first posts and give them dates
+- [ ] Write the next posts. The first one, on the German bow, is published in all ten languages; the other three are hidden drafts
 
 The contact form opens the visitor's mail app with the message filled in. To have messages sent from the page instead, set `contact_form_action` in `content/site.json` to the address a form service gives you.
 
