@@ -32,6 +32,8 @@ In Hsin Yeh's biography, also keep in Latin letters, unchanged: Pan-An Chen, Joa
 
 Use the language's own usual form for: place names (Columbus, Georgia is the US state, not the country), the Milan Conservatory, and composers (Reinhold Glière). The soloist Mikyung Sung is written 성미경 in Korean and stays in Latin letters, Mikyung Sung, in every other language. Hsin Yeh and Mikyung Sung are both women.
 
+Russian: the people on this site keep their names in Latin letters, as in the other non-Latin versions, with three exceptions who have a native Russian spelling: Rinat Ibragimov is Ринат Ибрагимов, Alexei Volodin is Алексей Володин, and the composer Reinhold Glière is Рейнгольд Глиэр. Use « » for quotation marks and — for the dash. Russian nouns change form after numbers, so the counted phrases ("{n} posts", "{n} minute read") must be worded so the number can be any value without a wrong ending, for example with the number after a colon.
+
 ## Register
 
 | Language | Address the reader as |
@@ -45,6 +47,7 @@ Use the language's own usual form for: place names (Columbus, Georgia is the US 
 | Korean (`ko`) | polite formal (합니다 / 습니다) |
 | Traditional Chinese (`zh-hant`), Taiwan usage | 你, polite |
 | Simplified Chinese (`zh-hans`), Mainland usage | 你, polite |
+| Russian (`ru`) | вы, written in lower case |
 
 ## Terms
 

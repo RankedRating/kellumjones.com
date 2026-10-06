@@ -512,7 +512,7 @@ def menu(current):
 {links}
 </div>
 <div class="menu-langs" aria-label="Language">
-%%LANG_LINKS%%
+%%LANG_MENU%%
 </div>
 <div class="menu-foot">
 <a href="{EMAIL_HREF}">{EMAIL_LABEL}</a>
@@ -984,17 +984,43 @@ def lang_prefix(code):
     return '' if code == 'en' else f'/{code}'
 
 
-def lang_links(path, current, offers=False):
-    """Links to this same page in every language, plus automatic translation for the rest.
-    With offers, each link also carries its "Read this page in ..." sentence for site.js to show."""
+# Languages the site has no version of, offered through Google's automatic translation: (Google's code, the language's own name).
+AUTO_LANGS = [
+    ('ar', 'العربية'), ('hi', 'हिन्दी'), ('bn', 'বাংলা'), ('ur', 'اردو'), ('fa', 'فارسی'), ('tr', 'Türkçe'),
+    ('vi', 'Tiếng Việt'), ('th', 'ไทย'), ('id', 'Bahasa Indonesia'), ('ms', 'Bahasa Melayu'), ('tl', 'Filipino'), ('sw', 'Kiswahili'),
+    ('nl', 'Nederlands'), ('pl', 'Polski'), ('uk', 'Українська'), ('cs', 'Čeština'), ('ro', 'Română'), ('hu', 'Magyar'),
+    ('el', 'Ελληνικά'), ('iw', 'עברית'), ('sv', 'Svenska'), ('no', 'Norsk'), ('da', 'Dansk'), ('fi', 'Suomi'),
+]
+
+
+def auto_url(target, code):
+    """Google's automatic translation of the English page at `target`, into the language `code`."""
+    return f'https://translate.google.com/translate?sl=en&amp;tl={code}&amp;u={BASE}{target}'
+
+
+def lang_links(path, current, where='footer'):
+    """Links to this same page in every language the site is written in, plus a way into automatic translation for the rest.
+    where='panel': the list under the header button. Each link carries its "Read this page in ..." sentence for site.js,
+                   and the other languages open in place as a second list.
+    where='footer': the same links, and one link that opens the panel's list of other languages.
+    where='menu':   the site's own languages only."""
     target = '/' if path == '/404.html' else path
     out = []
     for l in i18n.LANGS:
         cur = ' aria-current="true"' if l['code'] == current else ''
-        offer = f' data-offer="{esc(l["offer"])}"' if offers else ''
+        offer = f' data-offer="{esc(l["offer"])}"' if where == 'panel' else ''
         out.append(f'<a href="{lang_prefix(l["code"])}{target}" lang="{l["tag"]}" hreflang="{l["reach"]}" data-lang="{l["code"]}"{offer} translate="no"{cur}>{l["name"]}</a>')
-    auto = f'https://translate.google.com/translate?sl=en&amp;u={BASE}{target}'
-    out.append(f'<a href="{auto}" data-auto-translate rel="nofollow noopener">Other languages (automatic translation)</a>')
+    if where == 'panel':
+        # tl=CODE in the template link is swapped by site.js for a browser language that is not in the list
+        more = '\n'.join(f'<a href="{auto_url(target, code)}" lang="{"he" if code == "iw" else code}" data-auto="{code}" rel="nofollow noopener" translate="no">{name}</a>' for code, name in AUTO_LANGS)
+        out.append(f"""<details class="lang-more" data-auto-url="{auto_url(target, 'CODE')}">
+<summary>Other languages (automatic translation)</summary>
+<div class="lang-more-list">
+{more}
+</div>
+</details>""")
+    elif where == 'footer':
+        out.append('<a href="#lang" data-lang-more>Other languages (automatic translation)</a>')
     return '\n'.join(out)
 
 
@@ -1061,8 +1087,9 @@ def emit_pages():
             out = (doc.replace('%%HTML_LANG%%', l['tag']).replace('%%OG_LOCALE%%', l['og']).replace('%%LANG_NAME%%', l['name'])
                    .replace('%%LANG_CODE%%', code).replace('%%FEED_TITLE%%', esc(feed_title)).replace('%%LD_DESCRIPTION%%', ld_description)
                    .replace('%%PAGE_URL%%', f'{BASE}{lang_prefix(code)}{path}').replace('%%HREFLANG%%\n' if not hreflang else '%%HREFLANG%%', hreflang)
-                   .replace('%%LANG_PANEL%%', lang_links(path, code, offers=True))
-                   .replace('%%LANG_LINKS%%', lang_links(path, code)))
+                   .replace('%%LANG_PANEL%%', lang_links(path, code, 'panel'))
+                   .replace('%%LANG_MENU%%', lang_links(path, code, 'menu'))
+                   .replace('%%LANG_LINKS%%', lang_links(path, code, 'footer')))
             if code != 'en':
                 out = i18n.translate_page(swap_post_body(out, tr), tr, path)
             write((lang_prefix(code) + (path if path == '/404.html' else path + 'index.html')).lstrip('/'), out)
@@ -1122,7 +1149,7 @@ def build_extras():
 
 
 # File names for the translated biographies in the press kit.
-KIT_NAMES = {'es': 'spanish', 'de': 'german', 'fr': 'french', 'it': 'italian', 'pt': 'portuguese', 'ja': 'japanese',
+KIT_NAMES = {'es': 'spanish', 'de': 'german', 'fr': 'french', 'it': 'italian', 'pt': 'portuguese', 'ru': 'russian', 'ja': 'japanese',
              'ko': 'korean', 'zh-hant': 'chinese-traditional', 'zh-hans': 'chinese-simplified'}
 
 
@@ -1248,7 +1275,7 @@ if __name__ == '__main__':
         if len(bad) > 20:
             print(f'  ... and {len(bad) - 20} more')
     if '--strings' in sys.argv:              # the list of English text to translate, for making a translation file
-        strings = i18n.collect_strings([(p, d.replace('%%LANG_LINKS%%', lang_links(p, 'en'))) for p, d in PAGES_WRITTEN])
+        strings = i18n.collect_strings([(p, d.replace('%%LANG_LINKS%%', lang_links(p, 'en', 'footer')).replace('%%LANG_PANEL%%', lang_links(p, 'en', 'panel')).replace('%%LANG_MENU%%', '')) for p, d in PAGES_WRITTEN])
         os.makedirs(os.path.join(ROOT, 'content', 'i18n'), exist_ok=True)
         with open(os.path.join(ROOT, 'content', 'i18n', '_english.json'), 'w', encoding='utf-8') as f:
             json.dump(strings, f, indent=1, ensure_ascii=False)

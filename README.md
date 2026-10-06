@@ -35,7 +35,7 @@ then open http://localhost:8000.
 | `assets/css/site.css` | Fonts, page basics, the menu, and the styles for post text |
 | `assets/js/site.js` | Menu behavior and the contact form hand-off. The site works without it |
 | `build.py` | The page templates and the fixed text of each page (biography, teaching, duo, contact) |
-| `i18n.py` | Turns each English page into the other nine languages |
+| `i18n.py` | Turns each English page into the other ten languages |
 | `content/i18n/` | One translation file per language, plus the translators' guide |
 | `public/` | The finished site |
 
@@ -107,17 +107,18 @@ The Understory Duo page has a Commissions section that stays hidden while the li
 
 ## Languages
 
-The site is written in English and published in ten languages: English at the root, and Spanish, German, French, Italian, Portuguese, Japanese, Korean, Traditional Chinese and Simplified Chinese under `/es/`, `/de/`, `/fr/`, `/it/`, `/pt/`, `/ja/`, `/ko/`, `/zh-hant/` and `/zh-hans/`. Every page links to itself in each language from the globe in the header, the menu and the footer. An "Other languages" link sends the page through Google's automatic translation for anyone else.
+The site is written in English and published in eleven languages: English at the root, and Spanish, German, French, Italian, Portuguese, Russian, Japanese, Korean, Traditional Chinese and Simplified Chinese under `/es/`, `/de/`, `/fr/`, `/it/`, `/pt/`, `/ru/`, `/ja/`, `/ko/`, `/zh-hant/` and `/zh-hans/`. Every page links to itself in each language from the globe in the header, the menu and the footer. For anyone else, "Other languages" in the list under the globe opens a second list of about two dozen languages (`AUTO_LANGS` in `build.py`); each one sends the page through Google's automatic translation into that language. A visitor whose browser is set to a language in neither list has it added at the top.
 
-A visitor whose browser is set to one of the nine other languages is offered that language once, on a small card at the bottom of the page ("Read this page in ..."). Nothing redirects by itself. Choosing a language, or closing the card, is remembered in that browser and the card does not come back.
+A visitor whose browser is set to one of the ten other languages is offered that language once, on a small card at the bottom of the page ("Read this page in ..."). Nothing redirects by itself. Choosing a language, or closing the card, is remembered in that browser and the card does not come back.
 
 How it works:
 
-- `build.py` builds each page in English. `i18n.py` then makes the other nine versions by looking up every piece of text in `content/i18n/<code>.json`, rewriting dates and times in the language's own format, and pointing links at the same language.
+- `build.py` builds each page in English. `i18n.py` then makes the other ten versions by looking up every piece of text in `content/i18n/<code>.json`, rewriting dates and times in the language's own format, and pointing links at the same language.
 - **Text with no translation stays in English** on the translated pages. `python3 build.py --check` lists what is missing for each language, so run it after changing any wording, adding a performance, or adding a post.
 - To translate new text, add the English string and its translation to each `content/i18n/<code>.json`. `python3 build.py --strings` rewrites `content/i18n/_english.json`, the full list of English text in use. `content/i18n/README.md` is the guide for translators: voice, names, and the agreed musical terms.
 - **Posts** are translated as whole files. Put the translated post at `content/posts/<code>/<same file name>.md` with `title`, `summary` and `standfirst` translated in its header. A post with no translated file is shown in English under a one-line notice in the reader's language.
 - Anything in `[square brackets]` is never translated.
+- Text that only appears once certain content exists (the video section, the commissions list) has no translations yet. `--check` lists it as soon as it appears.
 - `reply_time` in `content/site.json` completes the sentence "I reply within ... ." on the Contact page. It is set to "two business days", and that sentence is translated. For any other wording, add the whole sentence ("I reply within a week.") to each translation file; `--check` lists it until that is done.
 - Each language also gets its own not-found page (`/es/404.html`), its own feed of posts (`/es/writing/feed.xml`) and its own biography sheet in the press kit. All three are made from the same translation files, so there is nothing extra to keep up.
 - The sentence on the offer card and each language's name live in `LANGS` at the top of `i18n.py`.
@@ -144,7 +145,7 @@ Run `python3 build.py --check`. It lists every bracketed placeholder still on th
 - [ ] Read and correct the biography and short biography in `build.py` (they are drafts). When there are performance highlights to name, add a paragraph to `BIO_PARAS`
 - [ ] Have Hsin read her biography on the Understory Duo page (`HSIN_BIO` near the top of `build.py`), in English and in Chinese
 - [ ] Add real performances and videos
-- [ ] Write the next posts. The first one, on the German bow, is published in all ten languages; the other three are hidden drafts
+- [ ] Write the next posts. The first one, on the German bow, is published in all eleven languages; the other three are hidden drafts
 
 The contact form opens the visitor's mail app with the message filled in. To have messages sent from the page instead, set `contact_form_action` in `content/site.json` to the address a form service gives you.
 
@@ -160,7 +161,7 @@ Photos are blended into the page in three ways, all in `assets/css/site.css`:
 
 ## Press kit
 
-Every build writes `public/press/kellum-jones-press-kit.zip`: both biographies as a text file in English, the same sheet in each of the nine other languages (in `biography-translations/`), plus everything in `assets/images/press/`. Unfinished biography paragraphs (the ones still in square brackets) are left out. To use a different file, set `press_kit` in `content/site.json` to its address.
+Every build writes `public/press/kellum-jones-press-kit.zip`: both biographies as a text file in English, the same sheet in each of the ten other languages (in `biography-translations/`), plus everything in `assets/images/press/`. Unfinished biography paragraphs (the ones still in square brackets) are left out. To use a different file, set `press_kit` in `content/site.json` to its address.
 
 ## Design
 
@@ -168,4 +169,4 @@ Eggshell ground (`#f0ead6`), black ink (`#000807`), oxblood accent (`#6d1f2b` pa
 
 ## Fonts
 
-Cardo by David J. Perry and Jost by Owen Earl, both under the SIL Open Font License. The Cardo files are subset to Latin characters.
+Cardo by David J. Perry and Jost by Owen Earl, both under the SIL Open Font License. The Cardo files are subset to Latin characters. Cardo has no Cyrillic letters, so on the Russian pages EB Garamond (Georg Duffner and Octavio Pardo, also SIL Open Font License) supplies them under Cardo's name; Jost has its own Cyrillic file. Browsers download the Cyrillic files only on pages that use them.

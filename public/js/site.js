@@ -35,13 +35,6 @@
     .map(function (t) { return String(t).toLowerCase(); }).filter(Boolean);
   var chinese = function (t) { return /hant|-tw|-hk|-mo/.test(t) ? 'zh-hant' : 'zh-hans'; };
 
-  // "Other languages": ask the automatic translator for the visitor's own language.
-  document.querySelectorAll('a[data-auto-translate]').forEach(function (a) {
-    var t = wanted[0] || '';
-    var tl = t.indexOf('zh') === 0 ? (chinese(t) === 'zh-hant' ? 'zh-TW' : 'zh-CN') : t.split('-')[0];
-    if (tl && tl !== 'en') a.href += '&tl=' + encodeURIComponent(tl);
-  });
-
   // The list under the language button: open and close in place, close on Escape or a click elsewhere.
   var panel = document.getElementById('lang');
   var langButton = document.querySelector('[data-lang-open]');
@@ -65,9 +58,49 @@
       el.addEventListener('click', function (e) { e.preventDefault(); hidePanel(true); });
     });
     document.addEventListener('click', function (e) {
-      if (shown() && !panel.contains(e.target) && !langButton.contains(e.target)) hidePanel(false);
+      var opener = e.target.closest ? e.target.closest('[data-lang-more]') : null;
+      if (shown() && !opener && !panel.contains(e.target) && !langButton.contains(e.target)) hidePanel(false);
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && shown()) hidePanel(true); });
+
+    // "Other languages": Google's automatic translation, for languages the site is not written in.
+    // The visitor's own language goes first; if it is not in the list, it is added.
+    var more = panel.querySelector('details.lang-more');
+    if (more) {
+      var list = more.querySelector('.lang-more-list');
+      var written = {};
+      panel.querySelectorAll('a[data-lang]').forEach(function (a) { written[a.getAttribute('data-lang')] = true; });
+      var alias = { he: 'iw', nb: 'no', nn: 'no', fil: 'tl' };
+      for (var j = 0; j < wanted.length; j++) {
+        var base = wanted[j].split('-')[0];
+        if (base === 'en' || base === 'zh' || written[base]) continue;
+        var google = alias[base] || base;
+        var own = list.querySelector('a[data-auto="' + google + '"]');
+        if (!own) {
+          var label = base;
+          try { label = new Intl.DisplayNames([base], { type: 'language' }).of(base) || base; } catch (err) { label = base; }
+          own = document.createElement('a');
+          own.href = more.getAttribute('data-auto-url').replace('tl=CODE', 'tl=' + encodeURIComponent(google));
+          own.lang = base;
+          own.rel = 'nofollow noopener';
+          own.setAttribute('translate', 'no');
+          own.setAttribute('data-auto', google);
+          own.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+        }
+        list.insertBefore(own, list.firstChild);
+        more.open = true;
+        break;
+      }
+      document.querySelectorAll('[data-lang-more]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          more.open = true;
+          showPanel();
+          panel.scrollIntoView({ block: 'start' });
+          more.querySelector('summary').focus({ preventScroll: true });
+        });
+      });
+    }
   }
 
   // Offer the visitor's own language once. Nothing is redirected: the page stays as it is until they choose.

@@ -30,6 +30,7 @@ LANGS = [
     {'code': 'fr', 'tag': 'fr', 'name': 'Français', 'og': 'fr_FR', 'offer': 'Lire cette page en français'},
     {'code': 'it', 'tag': 'it', 'name': 'Italiano', 'og': 'it_IT', 'offer': 'Leggi questa pagina in italiano'},
     {'code': 'pt', 'tag': 'pt-BR', 'name': 'Português', 'og': 'pt_BR', 'offer': 'Ler esta página em português', 'reach': 'pt'},
+    {'code': 'ru', 'tag': 'ru', 'name': 'Русский', 'og': 'ru_RU', 'offer': 'Читать эту страницу на русском'},
     {'code': 'ja', 'tag': 'ja', 'name': '日本語', 'og': 'ja_JP', 'offer': 'このページを日本語で読む'},
     {'code': 'ko', 'tag': 'ko', 'name': '한국어', 'og': 'ko_KR', 'offer': '이 페이지를 한국어로 보기'},
     {'code': 'zh-hant', 'tag': 'zh-Hant', 'name': '繁體中文', 'og': 'zh_TW', 'offer': '以繁體中文閱讀本頁'},
@@ -69,6 +70,8 @@ EXTRA = [
     'Other languages (automatic translation)',
     '1 post',
     'This post has not been translated yet. It is shown in English.',
+    # text that appears once there is more than one post, or a performance has passed
+    'All posts', 'Previous', 'Next', 'More writing', 'Past performances',
 ]
 
 # ------------------------------------------------------------------ dates and times
@@ -79,6 +82,8 @@ MONTHS = {
     'fr': ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
     'it': ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'],
     'pt': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+    # Russian months in the form used after a day number ("19 ноября")
+    'ru': ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
 }
 
 
@@ -103,7 +108,7 @@ def month_year(code, y, m):
         return f'{y}年{m}月'
     if code == 'ko':
         return f'{y}년 {m}월'
-    name = MONTHS[code][m - 1]
+    name = MONTHS[code][m - 1]          # always shown under a day number, so Russian keeps the form used after a day
     return f'{name} de {y}' if code in ('es', 'pt') else f'{name} {y}'
 
 
@@ -136,7 +141,7 @@ def clock(code, hour12, minute, ampm):
         return f'ore {h24}:{mm}'
     if code == 'pt':
         return f'{h24}h' if minute == 0 else f'{h24}h{mm}'
-    if code == 'ja':
+    if code in ('ja', 'ru'):
         return f'{h24}:{mm}'
     if code == 'ko':
         half = '오전' if ampm == 'am' else '오후'
@@ -215,16 +220,16 @@ class Translator:
         for key, rx in TEMPLATE_RES:
             m = rx.match(core)
             if m:
+                if 'time' in m.groupdict() and not RE_NOTE.match(m.group('time')):
+                    # A length of time is ordinary words, and they change form inside a sentence in most
+                    # languages, so the whole sentence needs its own translation. Until it has one, say so.
+                    self.missing.setdefault(core, self.page)
                 pattern = self.catalog.get(key)
                 if not pattern:
                     self.missing.setdefault(key, self.page)
                     return core
                 for name, value in m.groupdict().items():
                     pattern = pattern.replace('{' + name + '}', value)
-                    if name == 'time' and not RE_NOTE.match(value):
-                        # A length of time is ordinary words, and they change form inside a sentence in most
-                        # languages, so the whole sentence needs its own translation. Until it has one, say so.
-                        self.missing.setdefault(core, self.page)
                 return pattern
         self.missing.setdefault(core, self.page)
         return core

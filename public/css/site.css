@@ -7,6 +7,11 @@
 @font-face { font-family: Cardo; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/cardo-regular.woff2) format('woff2'); }
 @font-face { font-family: Cardo; font-style: italic; font-weight: 400; font-display: swap; src: url(/fonts/cardo-italic.woff2) format('woff2'); }
 @font-face { font-family: Jost; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/jost-latin-wght.woff2) format('woff2'); }
+/* Cyrillic, for the Russian pages: Jost has it; Cardo does not, so EB Garamond supplies those letters under Cardo's name.
+   Browsers fetch these files only on pages that contain Cyrillic letters. */
+@font-face { font-family: Jost; font-style: normal; font-weight: 100 900; font-display: swap; src: url(/fonts/jost-cyrillic-wght.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: Cardo; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/eb-garamond-cyrillic-regular.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; size-adjust: 106%; }
+@font-face { font-family: Cardo; font-style: italic; font-weight: 400; font-display: swap; src: url(/fonts/eb-garamond-cyrillic-italic.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; size-adjust: 106%; }
 
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -123,7 +128,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .lang-panel-list a:hover { text-decoration: underline; }
 .lang-panel-list a[aria-current] { color: #7a2531; }
 .lang-panel-list a[aria-current]::before { content: ''; position: absolute; left: -14px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: #7a2531; }
-.lang-panel-list a[data-auto-translate] { grid-column: 1 / -1; margin-top: 8px; padding-top: 8px; border-top: 1px solid #b7b09a; color: #7a2531; font-size: 15px; line-height: 20px; }
+.lang-more { grid-column: 1 / -1; margin-top: 8px; border-top: 1px solid #b7b09a; }
+.lang-more summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding-top: 4px; color: #7a2531; font-size: 15px; line-height: 20px; font-weight: 500; cursor: pointer; list-style: none; }
+.lang-more summary::-webkit-details-marker { display: none; }
+.lang-more summary::after { content: ''; flex: none; width: 7px; height: 7px; margin-right: 3px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.lang-more[open] summary::after { transform: translateY(2px) rotate(225deg); }
+.lang-more summary:hover { text-decoration: underline; }
+.lang-more-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; padding-bottom: 4px; }
+.lang-panel-list .lang-more-list a { min-height: 40px; font-size: 15px; line-height: 20px; font-weight: 400; }
 
 /* A one-time offer of the visitor's own language, added by site.js. It never redirects. */
 .lang-offer { position: fixed; z-index: 60; left: 16px; bottom: 16px; max-width: calc(100% - 32px); box-sizing: border-box; display: flex; align-items: center;
