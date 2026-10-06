@@ -747,7 +747,7 @@ def build_teach():
 </div>
 </section>
 
-{split(f'<h2 style="{H2}">What lessons cover</h2>', numbered(1, 'Sound and the bow', 'The bow hold, arm weight, contact point and string crossings. German bow is my own instrument.') + chr(10) + numbered(2, 'The left hand', 'Shifting, intonation and a hand frame that stays relaxed across the whole fingerboard.') + chr(10) + numbered(3, 'How to practice', 'How to plan an hour, what to do when a passage will not improve, and how to tell whether the work is paying off.', last=True), sec_id='cover')}
+{split(f'<h2 style="{H2}">What lessons cover</h2>', numbered(1, 'Sound and the bow', 'The bow hold, arm weight, contact point and string crossings. I play the German bow myself.') + chr(10) + numbered(2, 'The left hand', 'Shifting, intonation and a hand frame that stays relaxed across the whole fingerboard.') + chr(10) + numbered(3, 'How to practice', 'How to plan an hour, what to do when a passage will not improve, and how to tell whether the work is paying off.', last=True), sec_id='cover')}
 
 <section aria-label="Practical details" style="padding-top: clamp(96px, 12.5cqw, 160px)">
 <div class="p-bleed-r" style="box-sizing: border-box; background: {RAISED}; {PANEL_PAD_R}; display: flex; flex-direction: column; gap: 24px">
