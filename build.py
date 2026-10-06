@@ -89,7 +89,7 @@ BIO_LEAD = 'Kellum Jones is a double bassist based in Columbus, Georgia, buildin
 BIO_PARAS = [
     'He studies double bass performance at the Schwob School of Music with Dr. Luca Lombardi of the Milan Conservatory, and has taken summer lessons with the soloist Mikyung Sung. He plays the German bow in the Viennese tradition of Ludwig Streicher.',
     'In his second year of playing, Kellum was using the French bow. Watching countless videos of other bassists, he came across the players of the Viennese bow hold, most notably Ludwig Streicher, and soon bought his first German bow. The change was uncomfortable at first, and he came close to going back to the French bow. A masterclass with Mikyung Sung, whose bow hold is very similar to Streicher’s, kept him on it. What drew him in was the lightness and clarity of sound that the German bow allows.',
-    'Alongside his own playing, Kellum teaches. He is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he works with beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob. He also teaches privately in Columbus and online, taking students at every level and from any starting point, with the aim of giving each of them an unshakable foundation.',
+    'Alongside his own playing, Kellum teaches. He is on the double bass faculty of the LaGrange Youth Symphony Orchestra, where he works with beginning and intermediate players, and he leads weekly sessions on technique and musicianship for students at Schwob. He also teaches privately in Columbus and online, taking students at every level and from any starting point, with the aim of giving each of them a foundation that holds under pressure.',
     'With the pianist Hsin Yeh he performs as Understory Duo. The duo commissions new work from living composers, so that up-and-coming composers can grow the repertoire for double bass and piano. It also offers education for its community, showing the beauty of the double bass and the unique sound it makes together with the piano.',
     'Looking ahead, his goal is to continue building toward a solo career. He writes about practice and the German bow in the notebook on this site.',
 ]
@@ -738,7 +738,7 @@ def build_teach():
 <div style="flex: 7 1 420px; display: flex; flex-direction: column; gap: 24px">
 <p style="{LEAD}">Lessons start with how you hold the bow and how you listen.</p>
 <p style="{P}">I teach double bass at every level, and I will work with a student from any starting point. I am on the double bass faculty of the LaGrange Youth Symphony Orchestra, and I lead weekly technique sessions for students at the Schwob School of Music.</p>
-<p style="{P}">A student who studies with me can expect an unshakable foundation and the facility to achieve their goals. Students develop musicality and a strong understanding of the fundamentals of music.</p>
+<p style="{P}">A student who studies with me can expect a foundation that holds under pressure, and the facility to achieve their goals. Students develop musicality and a strong understanding of the fundamentals of music.</p>
 <a href="{URL['contact']}" style="{LINK}">Ask about lessons</a>
 </div>
 <div class="p-rise" style="position: relative; flex: 4 1 300px; max-width: 480px">
