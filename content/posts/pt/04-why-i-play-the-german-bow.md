@@ -29,4 +29,4 @@ Continuei assistindo a vídeos educativos e de apresentações para entender com
 
 De jeito nenhum! Tenho o maior respeito por todos os músicos e pela maneira como cada um aborda o som, e sei o esforço e o domínio técnico que é preciso ter para tocar bem. Mas, para mim, o arco alemão oferece uma certa leveza de som, suave e atraente, e uma clareza que me conquistou. Foi isso que me levou a fazer a troca.
 
-No meu próximo post, vou escrever sobre como trabalho para chegar ao domínio técnico do arco e sobre o que você pode fazer para chegar lá também!
+Em um post futuro, vou escrever sobre como trabalho para chegar ao domínio técnico do arco e sobre o que você pode fazer para chegar lá também!

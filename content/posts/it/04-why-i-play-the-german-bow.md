@@ -29,4 +29,4 @@ Ho continuato a guardare video didattici e di esecuzioni per capire come nasce u
 
 Assolutamente no! Ho il massimo rispetto per ogni musicista e per il suo approccio al suono, e so quanto impegno e quanta padronanza tecnica servono per suonare bene. Per me, però, l’arco alla tedesca offre una certa leggerezza di suono, morbida e piacevole, e una chiarezza che mi ha conquistato. È questo che mi ha portato a cambiare arco.
 
-Nel prossimo articolo scriverò di come lavoro per raggiungere la padronanza tecnica dell’arco e di che cosa puoi fare per arrivarci anche tu!
+In un prossimo articolo scriverò di come lavoro per raggiungere la padronanza tecnica dell’arco e di che cosa puoi fare per arrivarci anche tu!

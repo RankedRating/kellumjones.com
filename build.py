@@ -820,16 +820,88 @@ def topic_nav(current_topic=None):
     return '\n'.join(out)
 
 
+FULL_POSTS = 5          # the Writing page shows this many of the newest posts in full; older ones are listed below them
+
+
+def full_post(p, first=False):
+    """A whole post as it appears on the Writing page: date, title, the text, and a line saying who posted it."""
+    top = '' if first else f'padding-top: 56px; border-top: {RULE}; '
+    return f"""<article style="{top}display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+<span style="{META}">{long_date(p['date'])}</span>
+<h2 style="margin: 0; max-width: 760px; font-family: {SERIF}; font-size: clamp(36px, 4cqw, 52px); line-height: 1.08; font-weight: 400; letter-spacing: -0.01em"><a href="{p['url']}" style="color: inherit; text-decoration: none">{esc(p['title'])}</a></h2>
+<div class="prose"><!--notr--><!--post:{p['file']}-->
+{p['html']}
+<!--/post--><!--/notr--></div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px; margin-top: 8px">
+<span style="{META}">Posted by Kellum Jones</span>
+<a href="/writing/topic/{slugify(p['topic'])}/" style="{LINK}">{esc(p['topic'])}</a>
+<a href="{p['url']}" style="{LINK}">Link to this post</a>
+</div>
+</article>"""
+
+
+def archive_nav(posts):
+    """Every post by year and month, newest first. The newest year and month start open."""
+    years = {}
+    for p in posts:
+        if p['date']:
+            years.setdefault(p['date'].year, {}).setdefault(p['date'].month, []).append(p)
+    out = []
+    for yn, (y, months) in enumerate(sorted(years.items(), reverse=True)):
+        inner = []
+        for mn, (m, items) in enumerate(sorted(months.items(), reverse=True)):
+            links = '\n'.join(f'<a href="{p["url"]}" style="padding: 6px 0 6px 16px; font-size: 15px; line-height: 22px; color: {INK}">{esc(p["title"])}</a>' for p in items)
+            inner.append(f"""<details class="archive"{" open" if yn == 0 and mn == 0 else ""} style="padding-left: 16px">
+<summary><span>{MONTHS[m - 1]}</span> <span style="color: {MUTED}">({len(items)})</span></summary>
+<div style="display: flex; flex-direction: column">
+{links}
+</div>
+</details>""")
+        count = sum(len(v) for v in months.values())
+        out.append(f"""<details class="archive"{" open" if yn == 0 else ""}>
+<summary><span>{y}</span> <span style="color: {MUTED}">({count})</span></summary>
+{chr(10).join(inner)}
+</details>""")
+    return '\n'.join(out)
+
+
+def writing_sidebar():
+    box = f'display: flex; flex-direction: column; gap: 8px; padding-top: 20px; border-top: {RULE}'
+    topics = '\n'.join(f'<a href="/writing/topic/{slugify(name)}/" style="padding: 4px 0; font-size: 15px; line-height: 22px; color: {INK}">{name}</a>' for name, _ in TOPICS)
+    return f"""<aside aria-label="About this notebook" style="flex: 3 1 260px; max-width: 360px; display: flex; flex-direction: column; gap: 40px">
+<div style="{box}">
+<h2 style="{META}; margin: 0">About the author</h2>
+<img src="{IMG['think']}" alt="Kellum Jones" loading="lazy" style="display: block; width: 96px; height: 96px; margin: 4px 0; border-radius: 50%; object-fit: cover; object-position: 38% 30%">
+<span style="font-family: {SERIF}; font-size: 22px; line-height: 28px" translate="no">Kellum Jones</span>
+<span style="font-size: 15px; line-height: 22px; color: {MUTED}">Double bassist and teacher in Columbus, Georgia.</span>
+<a href="{URL['bio']}" style="{LINK}; min-height: 36px">Biography and photos</a>
+</div>
+<div style="{box}">
+<h2 style="{META}; margin: 0">Blog archive</h2>
+{archive_nav(POSTS)}
+</div>
+<div style="{box}">
+<h2 style="{META}; margin: 0">Topics</h2>
+{topics}
+</div>
+<div style="{box}">
+<h2 style="{META}; margin: 0">Subscribe</h2>
+<a href="/writing/feed.xml" style="{LINK}; min-height: 36px">Posts (RSS feed)</a>
+</div>
+</aside>"""
+
+
 def build_writing():
-    lead = lead_post(POSTS[0]) if POSTS else f'<p style="flex: 7 1 480px; {P}">The first post is on its way.</p>'
-    main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px clamp(32px, 8cqw, 104px)">
-{lead}
-<nav aria-label="Topics" class="h-drop" style="flex: 4 1 300px; display: flex; flex-direction: column">
-{topic_nav()}
-</nav>
+    shown, older = POSTS[:FULL_POSTS], POSTS[FULL_POSTS:]
+    posts = '\n'.join(full_post(p, first=(n == 0)) for n, p in enumerate(shown)) if shown else f'<p style="{P}">The first post is on its way.</p>'
+    main = f"""<section style="{WRAP}; padding: 96px {PAD} 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 64px clamp(32px, 7cqw, 96px)">
+<div style="flex: 9 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 56px">
+{posts}
+</div>
+{writing_sidebar()}
 </section>
 
-{split(f'<h2 style="{H2}">All posts</h2>', post_rows(POSTS), sec_id='all') if len(POSTS) > 1 else ''}
+{split(f'<h2 style="{H2}">Older posts</h2>', post_rows(older), sec_id='all') if older else ''}
 
 {NEWSLETTER}"""
     page(URL['writing'], 'Writing · Kellum Jones', 'Notes from the practice room: posts by Kellum Jones on practice, the German bow and new music for double bass.', band('<span>Writing</span>', 'Notes from the practice room', mark='segno'), main, current='writing')

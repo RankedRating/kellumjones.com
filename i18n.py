@@ -112,6 +112,23 @@ def month_year(code, y, m):
     return f'{name} de {y}' if code in ('es', 'pt') else f'{name} {y}'
 
 
+RU_MONTHS_ALONE = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+
+
+def month_alone(code, m):
+    """A month named on its own, as in the blog archive under a year."""
+    if code in ('ja', 'zh-hant', 'zh-hans'):
+        return f'{m}月'
+    if code == 'ko':
+        return f'{m}월'
+    if code == 'ru':
+        return RU_MONTHS_ALONE[m - 1]
+    if code not in MONTHS:
+        return EN_MONTHS[m - 1]
+    name = MONTHS[code][m - 1]
+    return name[0].upper() + name[1:]
+
+
 def day_month(code, m, d):
     if code in ('ja', 'zh-hant', 'zh-hans'):
         return f'{m}月{d}日'
@@ -154,6 +171,7 @@ _MON = '|'.join(EN_MONTHS)
 _ABBR = '|'.join(m[:3] for m in EN_MONTHS)
 RE_FULL = re.compile(rf'^({_MON}) (\d{{1,2}}), (\d{{4}})$')
 RE_MY = re.compile(rf'^({_ABBR}) (\d{{4}})$')
+RE_MONTH = re.compile(rf'^({_MON})$')
 RE_DM = re.compile(rf'^({_ABBR}) (\d{{1,2}})$')
 RE_TIME = re.compile(r'^(\d{1,2}):(\d{2})\s(am|pm)$')
 RE_PLAIN = re.compile(r'^[\d\s.,:;·©/()\-–—+]*$')           # numbers and punctuation only
@@ -209,6 +227,9 @@ class Translator:
         m = RE_FULL.match(core)
         if m:
             return full_date(self.code, int(m.group(3)), EN_MONTHS.index(m.group(1)) + 1, int(m.group(2)))
+        m = RE_MONTH.match(core)
+        if m:
+            return month_alone(self.code, EN_MONTHS.index(m.group(1)) + 1)
         m = RE_MY.match(core)
         if m:
             return month_year(self.code, int(m.group(2)), ABBR_INDEX[m.group(1)])

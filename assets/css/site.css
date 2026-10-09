@@ -186,3 +186,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 @media print {
   .menu, .skip, .lang-panel, .lang-offer { display: none !important; }
 }
+
+/* Blog archive on the Writing page: years and months that open and close */
+details.archive > summary { display: flex; align-items: center; gap: 6px; min-height: 36px; font-size: 15px; line-height: 22px; font-weight: 500; cursor: pointer; list-style: none; }
+details.archive > summary::-webkit-details-marker { display: none; }
+details.archive > summary::before { content: ''; flex: none; width: 6px; height: 6px; margin-right: 6px; border-right: 1.5px solid #7a2531; border-bottom: 1.5px solid #7a2531; transform: rotate(-45deg); transition: transform 0.15s; }
+details.archive[open] > summary::before { transform: rotate(45deg); }
+details.archive a:hover { color: #7a2531; }

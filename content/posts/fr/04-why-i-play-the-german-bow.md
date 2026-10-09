@@ -29,4 +29,4 @@ J’ai continué à regarder des vidéos pédagogiques et des vidéos de concert
 
 Pas du tout ! J’ai le plus grand respect pour tous les musiciens et pour leur approche du son, et je sais l’effort et la maîtrise technique qu’il faut pour bien jouer. Mais pour moi, l’archet allemand offre une certaine légèreté de son, fluide et séduisante, et une clarté qui m’a attiré. C’est ce qui m’a décidé à changer d’archet.
 
-Dans mon prochain article, je parlerai de la façon dont je travaille la maîtrise technique de l’archet, et de ce que vous pouvez faire pour y arriver vous aussi !
+Dans un article ultérieur, je parlerai de la façon dont je travaille la maîtrise technique de l’archet, et de ce que vous pouvez faire pour y arriver vous aussi !

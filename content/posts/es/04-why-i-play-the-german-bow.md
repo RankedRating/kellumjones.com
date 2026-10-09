@@ -29,4 +29,4 @@ Seguí viendo videos educativos y de actuaciones para entender cómo empieza un 
 
 ¡Para nada! Siento el mayor respeto por todos los músicos y por su manera de abordar el sonido, y sé el esfuerzo y el dominio técnico que hacen falta para tocar bien. Pero, para mí, el arco alemán ofrece cierta ligereza de sonido, suave y atractiva, y una claridad que me atrapó. Eso fue lo que me llevó a hacer el cambio.
 
-En mi próxima entrada escribiré sobre cómo trabajo para alcanzar el dominio técnico del arco, ¡y sobre lo que puedes hacer tú para conseguirlo!
+En una entrada posterior escribiré sobre cómo trabajo para alcanzar el dominio técnico del arco, ¡y sobre lo que puedes hacer tú para conseguirlo!

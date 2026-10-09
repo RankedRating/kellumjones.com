@@ -29,4 +29,4 @@ Ich schaute mir weiter Lehr- und Auftrittsvideos an, um zu verstehen, wie ein To
 
 Überhaupt nicht! Ich habe größten Respekt vor allen Musikerinnen und Musikern und ihrem Zugang zum Klang, und ich weiß, wie viel Mühe und technische Beherrschung es braucht, um gut zu spielen. Für mich aber bietet der deutsche Bogen eine gewisse Leichtigkeit im Klang, geschmeidig und ansprechend, und eine Klarheit, die mich anzog. Das brachte mich dazu, umzusteigen.
 
-In meinem nächsten Beitrag schreibe ich darüber, wie ich auf die technische Beherrschung des Bogens hinarbeite und was Sie tun können, um selbst dorthin zu kommen!
+In einem späteren Beitrag schreibe ich darüber, wie ich auf die technische Beherrschung des Bogens hinarbeite und was Sie tun können, um selbst dorthin zu kommen!

@@ -33,4 +33,4 @@ I kept watching teaching and performance videos to understand how a sound begins
 
 Not at all! I have the greatest respect for every musician and their approach to sound, and I know the effort and technical mastery it takes to play well. For me, though, the German bow offers a certain lightness of sound, smooth and appealing, and a clarity that drew me in. That is what led me to make the switch.
 
-In my next post, I will write about how I work toward technical mastery of the bow, and what you can do to get there yourself!
+In a later post, I will write about how I work toward technical mastery of the bow, and what you can do to get there yourself!
